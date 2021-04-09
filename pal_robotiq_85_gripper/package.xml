@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>pal_robotiq_gripper</name>
+  <name>pal_robotiq_85_gripper</name>
   <version>0.0.0</version>
-  <description>Robotiq Gripper Definition Packages</description>
+  <description>Robotiq Gripper 85 Definition Packages</description>
   <maintainer email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
   <author email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</author>
 
