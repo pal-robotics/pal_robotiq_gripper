@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>tiago_robot</name>
+  <name>pal_robotiq_gripper</name>
   <version>2.0.58</version>
   <description>Robotiq Gripper Definition Packages</description>
   <maintainer email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
