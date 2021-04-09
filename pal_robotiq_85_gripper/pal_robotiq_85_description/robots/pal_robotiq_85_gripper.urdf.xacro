@@ -2,7 +2,6 @@
 
 <robot name="robotiq_85_gripper" xmlns:xacro="http://ros.org/wiki/xacro">
     <xacro:include filename="$(find pal_robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro" />
-    <xacro:include filename="$(find pal_robotiq_85_description)/urdf/robotiq_85_kinova_coupler.urdf.xacro" />
     
     <xacro:property name="pi" value="3.1415"/>
     <xacro:property name="prefix" value=""/>
@@ -12,7 +11,7 @@
     <joint name="${prefix}pal_robotiq_coupler_joint" type="fixed">
         <parent link="base_link"/>
         <child link="${prefix}robotiq_coupler_link"/>
-        <origin xyz="0 0 -0.02754" rpy="0 0 0"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
     </joint>
     
     <link name="${prefix}robotiq_coupler_link">
@@ -28,7 +27,7 @@
         </collision>
         <inertial>
             <mass value="0.1" />
-            <origin xyz="0.0 0.0 0.02754" />
+            <origin xyz="0.0 0.0 0.0" />
             <inertia ixx = "0.000001" ixy = "0.000000" ixz = "0.000000"
                      iyx = "0.000000" iyy = "0.000001" iyz = "0.000000"
                      izx = "0.000000" izy = "0.000000" izz = "0.000001" />
@@ -36,7 +35,7 @@
     </link>
 
     <xacro:robotiq_85_gripper prefix="${prefix}" parent="${prefix}robotiq_coupler_link" >
-        <origin xyz="0 0 -0.0" rpy="0 ${pi/2} 0"/>
+        <origin xyz="0 0 -0.02754" rpy="0 ${pi/2} 0"/>
     </xacro:robotiq_85_gripper>
     
 </robot>
