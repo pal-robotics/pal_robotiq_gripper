@@ -182,7 +182,7 @@
     </joint>
     <gazebo>
       <!-- loading plugin: mimic joints works in gazebo now -->
-      <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_1">
+      <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}${fingerprefix}mimic_robotiq_85_1">
         <joint>${prefix}finger_joint</joint>
         <mimicJoint>${prefix}${fingerprefix}_inner_knuckle_joint</mimicJoint>
         <!--multiplier>1.0</multiplier>
@@ -202,7 +202,7 @@
     </joint>
     <gazebo>
       <!-- loading plugin: mimic joints works in gazebo now -->
-      <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_4">
+      <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}${fingerprefix}mimic_robotiq_85_4">
         <joint>${prefix}finger_joint</joint>
         <mimicJoint>${prefix}${fingerprefix}_inner_finger_joint</mimicJoint>
         <multiplier>-1.0</multiplier>
@@ -228,9 +228,9 @@
         <inertia ixx="0.00020005" ixy="-4.2442E-10" ixz="-2.9069E-10" iyy="0.00017832" iyz="-3.4402E-08" izz="0.00013478" />
       </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="0 -1.5709 0" />
         <geometry>
-          <mesh filename="package://pal_robotiq_85_description/meshes/visual/robotiq_85_base_link.dae" scale="0.001 0.001 0.001"/>
+          <mesh filename="package://pal_robotiq_85_description/meshes/visual/robotiq_85_base_link.stl"/>
         </geometry>
         <material name="">
           <color rgba="0.1 0.1 0.1 1" />
@@ -243,6 +243,11 @@
         </geometry>
       </collision>
     </link>
+    <gazebo reference="${prefix}base_link">
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <material>Gazebo/Black</material>
+    </gazebo>
   </xacro:macro>
 
   <xacro:macro name="pal_robotiq_coupling_link" params="prefix">
@@ -271,6 +276,11 @@
                      izx = "0.000000" izy = "0.000000" izz = "0.000001" />
         </inertial>
     </link>
+    <gazebo reference="${prefix}coupler_link">
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <material>Gazebo/Black</material>
+    </gazebo>
   </xacro:macro>
 
   <xacro:macro name="pal_robotiq_coupling_joint" params="prefix parent *origin">
