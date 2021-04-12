@@ -245,11 +245,45 @@
     </link>
   </xacro:macro>
 
-  <xacro:macro name="robotiq_base_joint" params="prefix parent *origin">
-    <joint name="${prefix}gripper_base_joint" type="fixed">
+  <xacro:macro name="pal_robotiq_coupling_link" params="prefix">
+    <link name="${prefix}coupler_link">
+        <visual>
+            <origin xyz="0 0 0.013771" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="0.027542" radius="0.0375"/>
+                <!--mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/-->
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.013771" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="0.027542" radius="0.0375"/>
+                <!--mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/-->
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1" />
+            <origin xyz="0.0 0.0 0.0" />
+            <inertia ixx = "0.000001" ixy = "0.000000" ixz = "0.000000"
+                     iyx = "0.000000" iyy = "0.000001" iyz = "0.000000"
+                     izx = "0.000000" izy = "0.000000" izz = "0.000001" />
+        </inertial>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="pal_robotiq_coupling_joint" params="prefix parent *origin">
+    <joint name="${prefix}coupler_joint" type="fixed">
       <parent link="${parent}"/>
-      <child link="${prefix}base_link"/>
+      <child link="${prefix}coupler_link"/>
       <xacro:insert_block name="origin"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="robotiq_base_joint" params="prefix">
+    <joint name="${prefix}base_joint" type="fixed">
+      <parent link="${prefix}coupler_link"/>
+      <child link="${prefix}base_link"/>
+      <origin xyz="0 0 0.02754" rpy="0 0 0"/>
     </joint>
   </xacro:macro>
 
@@ -303,11 +337,13 @@
   <!-- Initialization of all joints and links -->
   <xacro:macro name="robotiq_85_gripper" params="prefix parent *origin">
     <xacro:robotiq_base_link prefix="${prefix}"/>
+    <xacro:pal_robotiq_coupling_link prefix="${prefix}"/>
     <xacro:finger_links prefix="${prefix}" fingerprefix="left" />
     <xacro:finger_links prefix="${prefix}" fingerprefix="right"/>
-    <xacro:robotiq_base_joint prefix="${prefix}" parent="${parent}">
+    <xacro:robotiq_base_joint prefix="${prefix}" />
+    <xacro:pal_robotiq_coupling_joint prefix="${prefix}" parent="${parent}">
       <xacro:insert_block name="origin" />
-    </xacro:robotiq_base_joint>
+    </xacro:pal_robotiq_coupling_joint>
     <xacro:finger_joint prefix="${prefix}"/>
     <xacro:right_outer_knuckle_joint prefix="${prefix}"/>
     <xacro:robotiq_85_gripper_transmission prefix="${prefix}"/>
