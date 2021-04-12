@@ -2,52 +2,18 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:macro name="robotiq_85_gripper_transmission" params="prefix">
-    <transmission name="${prefix}gripper_finger1_trans">
+    <transmission name="${prefix}gripper_finger_trans">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="${prefix}gripper_finger_left_joint">
+        <joint name="${prefix}finger_joint">
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
             <hardwareInterface>hardware_interface/JointStateInterface</hardwareInterface>
         </joint>
-        <actuator name="${prefix}gripper_finger1_motor">
+        <actuator name="${prefix}finger_motor">
             <mechanicalReduction>1</mechanicalReduction>
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
             <hardwareInterface>hardware_interface/JointStateInterface</hardwareInterface>
         </actuator>
     </transmission>
-
-    <gazebo>
-            <!-- loading plugin: mimic joints works in gazebo now -->
-        <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_1">
-            <joint>${prefix}gripper_finger_left_joint</joint>
-            <mimicJoint>${prefix}gripper_finger_right_joint</mimicJoint>
-            <!--multiplier>1.0</multiplier>
-            <offset>0.0</offset-->
-        </plugin>
-        <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_2">
-            <joint>${prefix}gripper_finger_left_joint</joint>
-            <mimicJoint>${prefix}gripper_finger2_inner_knuckle_joint</mimicJoint>
-            <!--multiplier>1.0</multiplier>
-            <offset>0.0</offset-->
-        </plugin>
-        <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_3">
-            <joint>${prefix}gripper_finger_left_joint</joint>
-            <mimicJoint>${prefix}gripper_finger1_inner_knuckle_joint</mimicJoint>
-            <!--multiplier>1.0</multiplier>
-            <offset>0.0</offset-->
-        </plugin>
-        <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_4">
-            <joint>${prefix}gripper_finger_left_joint</joint>
-            <mimicJoint>${prefix}gripper_finger1_finger_tip_joint</mimicJoint>
-            <multiplier>-1.0</multiplier>
-            <offset>0.0</offset>
-        </plugin>
-        <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_5">
-            <joint>${prefix}gripper_finger_left_joint</joint>
-            <mimicJoint>${prefix}gripper_finger2_finger_tip_joint</mimicJoint>
-            <multiplier>-1.0</multiplier>
-            <offset>0.0</offset>
-        </plugin>
-    </gazebo>
   </xacro:macro>
 
 </robot>

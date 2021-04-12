@@ -4,25 +4,29 @@
     <xacro:include filename="$(find pal_robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro" />
     
     <xacro:property name="pi" value="3.1415"/>
-    <xacro:property name="prefix" value=""/>
+    <xacro:property name="prefix" value="gripper_"/>
 
     <link name="base_link"/>
     
-    <joint name="${prefix}pal_robotiq_coupler_joint" type="fixed">
+    <joint name="${prefix}coupler_joint" type="fixed">
         <parent link="base_link"/>
-        <child link="${prefix}robotiq_coupler_link"/>
+        <child link="${prefix}coupler_link"/>
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
     </joint>
     
-    <link name="${prefix}robotiq_coupler_link">
+    <link name="${prefix}coupler_link">
         <visual>
+            <origin xyz="0 0 0.013771" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/>
+                <cylinder length="0.027542" radius="0.0375"/>
+                <!--mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/-->
             </geometry>
         </visual>
         <collision>
+            <origin xyz="0 0 0.013771" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/>
+                <cylinder length="0.027542" radius="0.0375"/>
+                <!--mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/-->
             </geometry>
         </collision>
         <inertial>
@@ -34,8 +38,8 @@
         </inertial>
     </link>
 
-    <xacro:robotiq_85_gripper prefix="${prefix}" parent="${prefix}robotiq_coupler_link" >
-        <origin xyz="0 0 -0.02754" rpy="0 ${pi/2} 0"/>
+    <xacro:robotiq_85_gripper prefix="${prefix}" parent="${prefix}coupler_link" >
+        <origin xyz="0 0 0.02754" rpy="0 0 0"/>
     </xacro:robotiq_85_gripper>
     
 </robot>
