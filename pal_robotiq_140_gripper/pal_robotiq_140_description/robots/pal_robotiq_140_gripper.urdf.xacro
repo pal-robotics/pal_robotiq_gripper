@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+
+<robot name="robotiq_140_gripper" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find pal_robotiq_140_description)/urdf/robotiq_140_gripper.urdf.xacro" />
+    
+    <xacro:property name="pi" value="3.1415"/>
+    <xacro:property name="prefix" value="gripper_"/>
+
+    <link name="base_link"/>
+    
+    <joint name="${prefix}coupler_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="${prefix}coupler_link"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+    </joint>
+    
+    <link name="${prefix}coupler_link">
+        <visual>
+            <origin xyz="0 0 0.013771" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="0.027542" radius="0.0375"/>
+                <!--mesh filename="package://pal_robotiq_140_description/meshes/visual/pal_robotiq_coupling.stl"/-->
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.013771" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="0.027542" radius="0.0375"/>
+                <!--mesh filename="package://pal_robotiq_140_description/meshes/visual/pal_robotiq_coupling.stl"/-->
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1" />
+            <origin xyz="0.0 0.0 0.0" />
+            <inertia ixx = "0.000001" ixy = "0.000000" ixz = "0.000000"
+                     iyx = "0.000000" iyy = "0.000001" iyz = "0.000000"
+                     izx = "0.000000" izy = "0.000000" izz = "0.000001" />
+        </inertial>
+    </link>
+
+    <xacro:robotiq_140_gripper prefix="${prefix}" parent="${prefix}coupler_link" >
+        <origin xyz="0 0 0.02754" rpy="0 0 0"/>
+    </xacro:robotiq_140_gripper>
+    
+</robot>
