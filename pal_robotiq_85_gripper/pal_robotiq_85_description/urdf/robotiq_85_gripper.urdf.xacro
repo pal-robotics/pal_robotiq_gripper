@@ -231,9 +231,9 @@
         <inertia ixx="605783E-9" ixy="-579.95E-9" ixz="2765.53E-9" iyy="720148E-9" iyz="618E-9" izz="510534E-9" />
       </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 -1.5709 0" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://pal_robotiq_85_description/meshes/visual/robotiq_85_base_link.stl"/>
+          <mesh filename="package://pal_robotiq_85_description/meshes/visual/robotiq_base_link.stl"/>
         </geometry>
         <material name="">
           <color rgba="0.1 0.1 0.1 1" />
