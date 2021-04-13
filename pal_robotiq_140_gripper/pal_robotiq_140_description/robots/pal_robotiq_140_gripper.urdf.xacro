@@ -6,31 +6,34 @@
     <xacro:property name="pi" value="3.1415"/>
     <xacro:property name="prefix" value="gripper_"/>
 
-    <link name="base_link"/>
-    
-    <joint name="${prefix}coupler_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="${prefix}coupler_link"/>
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace></robotNamespace>
+        </plugin>
+    </gazebo>
+
+    <link name="world"/>
+    <joint name="world_fixed" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="world"/>
+        <child link="gripper_root_link"/>
     </joint>
-    
-    <link name="${prefix}coupler_link">
+
+    <link name="gripper_root_link">
         <visual>
-            <origin xyz="0 0 0.013771" rpy="0 0 0" />
+            <origin xyz="0 0 0.5" rpy="0 0 0"/>
             <geometry>
-                <cylinder length="0.027542" radius="0.0375"/>
-                <!--mesh filename="package://pal_robotiq_140_description/meshes/visual/pal_robotiq_coupling.stl"/-->
+                <box size="0.1 0.1 1.0"/>
             </geometry>
         </visual>
         <collision>
-            <origin xyz="0 0 0.013771" rpy="0 0 0" />
+            <origin xyz="0 0 0.5" rpy="0 0 0"/>
             <geometry>
-                <cylinder length="0.027542" radius="0.0375"/>
-                <!--mesh filename="package://pal_robotiq_140_description/meshes/visual/pal_robotiq_coupling.stl"/-->
+                <box size="0.1 0.1 1.0"/>
             </geometry>
         </collision>
         <inertial>
-            <mass value="0.1" />
+            <mass value="1e2" />
             <origin xyz="0.0 0.0 0.0" />
             <inertia ixx = "0.000001" ixy = "0.000000" ixz = "0.000000"
                      iyx = "0.000000" iyy = "0.000001" iyz = "0.000000"
@@ -38,8 +41,8 @@
         </inertial>
     </link>
 
-    <xacro:robotiq_140_gripper prefix="${prefix}" parent="${prefix}coupler_link" >
-        <origin xyz="0 0 0.02754" rpy="0 0 0"/>
+    <xacro:robotiq_140_gripper prefix="${prefix}" parent="gripper_root_link" >
+        <origin xyz="0.05 0 0.85" rpy="0 1.5708 0"/>
     </xacro:robotiq_140_gripper>
     
 </robot>
