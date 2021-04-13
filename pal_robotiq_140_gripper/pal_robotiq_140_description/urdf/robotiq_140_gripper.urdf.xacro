@@ -2,6 +2,25 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find pal_robotiq_140_description)/urdf/robotiq_140_gripper.transmission.xacro" />
 
+  <xacro:macro name="mimic_joint_plugin_gazebo" params="name_prefix parent_joint mimic_joint has_pid:=false multiplier:=1.0 offset:=0 sensitiveness:=0.0 max_effort:=10.0 robot_namespace:=''">
+    <gazebo>
+      <plugin name="${name_prefix}mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+        <joint>${parent_joint}</joint>
+        <mimicJoint>${mimic_joint}</mimicJoint>
+        <xacro:if value="${has_pid}">                     <!-- if set to true, PID parameters from "/gazebo_ros_control/pid_gains/${mimic_joint}" are loaded -->
+          <hasPID />
+        </xacro:if>
+        <multiplier>${multiplier}</multiplier>
+        <offset>${offset}</offset>
+        <sensitiveness>${sensitiveness}</sensitiveness>   <!-- if absolute difference between setpoint and process value is below this threshold, do nothing; 0.0 = disable [rad] -->
+        <maxEffort>${max_effort}</maxEffort>              <!-- only taken into account if has_pid:=true [Nm] -->
+        <xacro:unless value="${robot_namespace == ''}">
+          <robotNamespace>${robot_namespace}</robotNamespace>
+        </xacro:unless>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
   <xacro:macro name="outer_knuckle" params="prefix fingerprefix stroke">
     <link name="${prefix}${fingerprefix}_outer_knuckle">
       <inertial>
@@ -187,15 +206,7 @@
       <limit lower="-0.8757" upper="0.8757" velocity="2.0" effort="1000" />
       <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
     </joint>
-    <gazebo>
-      <!-- loading plugin: mimic joints works in gazebo now -->
-      <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_1">
-        <joint>${prefix}finger_joint</joint>
-        <mimicJoint>${prefix}${fingerprefix}_inner_knuckle_joint</mimicJoint>
-        <!--multiplier>1.0</multiplier>
-        <offset>0.0</offset-->
-      </plugin>
-    </gazebo>
+    <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}${fingerprefix}mimic_robotiq_85_1" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}${fingerprefix}_inner_knuckle_joint" has_pid="false" multiplier="-1.0" offset="0.0"/>
   </xacro:macro>
 
   <xacro:macro name="inner_finger_joint" params="prefix fingerprefix">
@@ -207,15 +218,7 @@
       <limit lower="-0.8757" upper="0.8757" velocity="2.0" effort="1000" />
       <mimic joint="${prefix}finger_joint" multiplier="1" offset="0" />
     </joint>
-    <gazebo>
-      <!-- loading plugin: mimic joints works in gazebo now -->
-      <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_4">
-        <joint>${prefix}finger_joint</joint>
-        <mimicJoint>${prefix}${fingerprefix}_inner_finger_joint</mimicJoint>
-        <multiplier>-1.0</multiplier>
-        <offset>0.0</offset>
-      </plugin>
-    </gazebo>
+    <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}${fingerprefix}mimic_robotiq_85_1" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}${fingerprefix}_inner_finger_joint" has_pid="false" multiplier="1.0" offset="0.0"/>
   </xacro:macro>
 
   <xacro:macro name="inner_finger_pad_joint" params="prefix fingerprefix">
@@ -295,6 +298,7 @@
       <limit lower="-0.725" upper="0.725" velocity="2.0" effort="1000" />
     <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
     </joint>
+    <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}mimic_robotiq_85_5" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}right_outer_knuckle_joint" has_pid="false" multiplier="-1.0" offset="0.0"/>
     <xacro:finger_joints prefix="${prefix}" fingerprefix="right" reflect="-1.0"/>
   </xacro:macro>
 
