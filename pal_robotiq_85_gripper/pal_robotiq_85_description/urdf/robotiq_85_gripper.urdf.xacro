@@ -50,6 +50,7 @@
         <mu2>100000</mu2>
         <kp>100000000.0</kp>
         <kd>1.0</kd>
+        <material>Gazebo/DarkGrey</material>
     </gazebo> 
   </xacro:macro>
 
@@ -158,7 +159,7 @@
           <box size="0.022 0.00635 0.0375"/>
         </geometry>
         <material name="">
-          <color rgba="0.9 0.9 0.9 1" />
+          <color rgba="0. 0. 0. 1" />
         </material>
       </visual>
       <collision>
@@ -172,11 +173,12 @@
       </collision>
     </link>
     <gazebo reference="${prefix}${fingerprefix}_inner_finger_pad">
-        <implicitSpringDamper>1</implicitSpringDamper>
-        <mu1>100000</mu1>
-        <mu2>100000</mu2>
-        <kp>100000000.0</kp>
-        <kd>1.0</kd>
+      <implicitSpringDamper>1</implicitSpringDamper>
+      <mu1>100000</mu1>
+      <mu2>100000</mu2>
+      <kp>100000000.0</kp>
+      <kd>1.0</kd>
+      <material>Gazebo/DarkGrey</material>
     </gazebo>  
   </xacro:macro>
 
@@ -254,16 +256,15 @@
   </xacro:macro>
 
   <xacro:macro name="pal_robotiq_coupling_link" params="prefix">
-    <material name="black">
-      <color rgba="0 0 0 1"/>
-    </material>
     <link name="${prefix}coupler_link">
       <visual>
           <origin xyz="0 0 0.0" rpy="3.1416 0 0" />
           <geometry>
               <mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/>
           </geometry>
-          <material name="black"/>
+          <material name="black">
+            <color rgba="0 0 0 1"/>
+          </material>
       </visual>
       <collision>
           <origin xyz="0 0 0.0" rpy="3.1416 0 0" />
