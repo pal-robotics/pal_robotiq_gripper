@@ -21,13 +21,13 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:macro name="outer_knuckle" params="prefix fingerprefix ">
+  <xacro:macro name="outer_knuckle" params="prefix fingerprefix reflect">
     <link name="${prefix}${fingerprefix}_outer_knuckle">
       <inertial>
-        <origin xyz="-0.000200000000003065 0.0199435877845359 0.0292245259211331" rpy="0 0 0" />
-        <mass value="0.01853198276973456" />
-        <inertia ixx="2.89328108496468E-06" ixy="-1.57935047237397E-19" ixz="-1.93980378593255E-19" iyy="1.86719750325683E-06" iyz="-1.21858577871576E-06" izz="1.21905238907251E-06" />
-      </inertial> 
+        <origin xyz="${reflect * 0.01545} 0 -0.00118" rpy="0 0 0" />
+        <mass value="0.01252" />
+        <inertia ixx="312.44E-9" ixy="0" ixz="-168.09E-9" iyy="2156E-9" iyz="0" izz="2027.51E-9" />
+      </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
@@ -50,16 +50,16 @@
         <mu2>100000</mu2>
         <kp>100000000.0</kp>
         <kd>1.0</kd>
-    </gazebo>  
+    </gazebo> 
   </xacro:macro>
 
-  <xacro:macro name="outer_finger" params="prefix fingerprefix ">
+  <xacro:macro name="outer_finger" params="prefix fingerprefix reflect">
     <link name="${prefix}${fingerprefix}_outer_finger">
       <inertial>
-        <origin xyz="0.00030115855001899 0.0373907951953854 -0.0208027427000385" rpy="0 0 0" />
-        <mass value="0.022614240507152" />
-        <inertia ixx="1.52518312458174E-05" ixy="9.76583423954399E-10" ixz="-5.43838577022588E-10" iyy="6.17694243867776E-06" iyz="6.78636130740228E-06" izz="1.16494917907219E-05" />
-      </inertial> 
+        <origin xyz="0.004 0 ${reflect * 0.01892}" rpy="0 0 0" />
+        <mass value="0.03848" />
+        <inertia ixx="12341E-9" ixy="0" ixz="-2152.21E-9" iyy="10617E-9" iyz="0" izz="4812.09E-9" />
+      </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
@@ -85,12 +85,12 @@
     </gazebo>  
   </xacro:macro>
 
-  <xacro:macro name="inner_knuckle" params="prefix fingerprefix ">
+  <xacro:macro name="inner_knuckle" params="prefix fingerprefix reflect">
     <link name="${prefix}${fingerprefix}_inner_knuckle">
       <inertial>
-        <origin xyz="0.000123011831763771 0.0507850843201817 0.00103968640075166" rpy="0 0 0" />
-       <mass value="0.0271177346495152" />
-        <inertia ixx="2.61910379223783E-05" ixy="-2.43616858946494E-07" ixz="-6.37789906117123E-09" iyy="2.8270243746167E-06" iyz="-5.37200748039765E-07" izz="2.83695868220296E-05" />
+        <origin xyz="${reflect * 0.01952} 0 0.022" rpy="0 0 0" />
+        <mass value="0.02731" />
+        <inertia ixx="8621.3E-9" ixy="0" ixz="-3646.49E-9" iyy="8004.28E-9" iyz="0" izz="7704.42E-9" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -117,12 +117,12 @@
     </gazebo>  
   </xacro:macro>
 
-  <xacro:macro name="inner_finger" params="prefix fingerprefix ">
+  <xacro:macro name="inner_finger" params="prefix fingerprefix reflect">
     <link name="${prefix}${fingerprefix}_inner_finger">
       <inertial>
-        <origin xyz="0.000299999999999317 0.0160078233491243 -0.0136945669206257" rpy="0 0 0" />
-        <mass value="0.0104003125914103" />
-        <inertia ixx="2.71909453810972E-06" ixy="1.35402465472579E-21" ixz="-7.1817349065269E-22" iyy="7.69100314106116E-07" iyz="6.74715432769696E-07" izz="2.30315190420171E-06" />
+        <origin xyz="${reflect * -0.01409} 0 0.01569" rpy="0 0 0" />
+        <mass value="0.037" />
+        <inertia ixx="12446.57E-9" ixy="0" ixz="4167.81E-9" iyy="14201.18E-9" iyz="0" izz="4979.86E-9" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -226,9 +226,9 @@
    <xacro:macro name="robotiq_base_link" params="prefix">
     <link name="${prefix}base_link">
       <inertial>
-        <origin xyz="8.625E-08 -4.6583E-06 0.03145" rpy="0 0 0" />
-        <mass value="0.22652" />
-        <inertia ixx="0.00020005" ixy="-4.2442E-10" ixz="-2.9069E-10" iyy="0.00017832" iyz="-3.4402E-08" izz="0.00013478" />
+        <origin xyz="-0.00013 -0.00011 0.03284" rpy="0 0 0" />
+        <mass value="0.55938" />
+        <inertia ixx="605783E-9" ixy="-579.95E-9" ixz="2765.53E-9" iyy="720148E-9" iyz="618E-9" izz="510534E-9" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 -1.5709 0" />
@@ -309,12 +309,12 @@
     <xacro:inner_finger_pad_joint prefix="${prefix}" fingerprefix="${fingerprefix}"/>
   </xacro:macro>
 
-  <xacro:macro name="finger_links" params="prefix fingerprefix">
-    <xacro:outer_knuckle prefix="${prefix}" fingerprefix="${fingerprefix}" />
-    <xacro:outer_finger prefix="${prefix}" fingerprefix="${fingerprefix}" />
-    <xacro:inner_finger prefix="${prefix}" fingerprefix="${fingerprefix}" />
+  <xacro:macro name="finger_links" params="prefix fingerprefix reflect">
+    <xacro:outer_knuckle prefix="${prefix}" fingerprefix="${fingerprefix}" reflect="${reflect}"/>
+    <xacro:outer_finger prefix="${prefix}" fingerprefix="${fingerprefix}" reflect="${reflect}"/>
+    <xacro:inner_finger prefix="${prefix}" fingerprefix="${fingerprefix}" reflect="${reflect}"/>
     <xacro:inner_finger_pad prefix="${prefix}" fingerprefix="${fingerprefix}"/>
-    <xacro:inner_knuckle prefix="${prefix}" fingerprefix="${fingerprefix}" />
+    <xacro:inner_knuckle prefix="${prefix}" fingerprefix="${fingerprefix}" reflect="${reflect}"/>
   </xacro:macro>
 
   <xacro:macro name="finger_joint" params="prefix">
@@ -345,8 +345,8 @@
   <xacro:macro name="robotiq_85_gripper" params="prefix parent *origin">
     <xacro:robotiq_base_link prefix="${prefix}"/>
     <xacro:pal_robotiq_coupling_link prefix="${prefix}"/>
-    <xacro:finger_links prefix="${prefix}" fingerprefix="left" />
-    <xacro:finger_links prefix="${prefix}" fingerprefix="right"/>
+    <xacro:finger_links prefix="${prefix}" fingerprefix="left" reflect="1"/>
+    <xacro:finger_links prefix="${prefix}" fingerprefix="right" reflect="-1"/>
     <xacro:robotiq_base_joint prefix="${prefix}" />
     <xacro:pal_robotiq_coupling_joint prefix="${prefix}" parent="${parent}">
       <xacro:insert_block name="origin" />
