@@ -2,11 +2,30 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find pal_robotiq_85_description)/urdf/robotiq_85_gripper.transmission.xacro" />
 
+  <xacro:macro name="mimic_joint_plugin_gazebo" params="name_prefix parent_joint mimic_joint has_pid:=false multiplier:=1.0 offset:=0 sensitiveness:=0.0 max_effort:=10.0 robot_namespace:=''">
+    <gazebo>
+      <plugin name="${name_prefix}mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+        <joint>${parent_joint}</joint>
+        <mimicJoint>${mimic_joint}</mimicJoint>
+        <xacro:if value="${has_pid}">                     <!-- if set to true, PID parameters from "/gazebo_ros_control/pid_gains/${mimic_joint}" are loaded -->
+          <hasPID />
+        </xacro:if>
+        <multiplier>${multiplier}</multiplier>
+        <offset>${offset}</offset>
+        <sensitiveness>${sensitiveness}</sensitiveness>   <!-- if absolute difference between setpoint and process value is below this threshold, do nothing; 0.0 = disable [rad] -->
+        <maxEffort>${max_effort}</maxEffort>              <!-- only taken into account if has_pid:=true [Nm] -->
+        <xacro:unless value="${robot_namespace == ''}">
+          <robotNamespace>${robot_namespace}</robotNamespace>
+        </xacro:unless>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
   <xacro:macro name="outer_knuckle" params="prefix fingerprefix ">
     <link name="${prefix}${fingerprefix}_outer_knuckle">
       <inertial>
         <origin xyz="-0.000200000000003065 0.0199435877845359 0.0292245259211331" rpy="0 0 0" />
-        <mass value="0.00853198276973456" />
+        <mass value="0.01853198276973456" />
         <inertia ixx="2.89328108496468E-06" ixy="-1.57935047237397E-19" ixz="-1.93980378593255E-19" iyy="1.86719750325683E-06" iyz="-1.21858577871576E-06" izz="1.21905238907251E-06" />
       </inertial> 
       <visual>
@@ -180,15 +199,7 @@
       <limit lower="0" upper="0.8757" velocity="2.0" effort="1000" />
       <mimic joint="${prefix}finger_joint" multiplier="1" offset="0" />
     </joint>
-    <gazebo>
-      <!-- loading plugin: mimic joints works in gazebo now -->
-      <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}${fingerprefix}mimic_robotiq_85_1">
-        <joint>${prefix}finger_joint</joint>
-        <mimicJoint>${prefix}${fingerprefix}_inner_knuckle_joint</mimicJoint>
-        <!--multiplier>1.0</multiplier>
-        <offset>0.0</offset-->
-      </plugin>
-    </gazebo>
+    <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}${fingerprefix}mimic_robotiq_85_1" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}${fingerprefix}_inner_knuckle_joint" has_pid="false" multiplier="1.0" offset="0.0"/>
   </xacro:macro>
 
   <xacro:macro name="inner_finger_joint" params="prefix fingerprefix">
@@ -200,15 +211,7 @@
       <limit lower="0" upper="0.8757" velocity="2.0" effort="1000" />
       <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
     </joint>
-    <gazebo>
-      <!-- loading plugin: mimic joints works in gazebo now -->
-      <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}${fingerprefix}mimic_robotiq_85_4">
-        <joint>${prefix}finger_joint</joint>
-        <mimicJoint>${prefix}${fingerprefix}_inner_finger_joint</mimicJoint>
-        <multiplier>-1.0</multiplier>
-        <offset>0.0</offset>
-      </plugin>
-    </gazebo>
+    <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}${fingerprefix}mimic_robotiq_85_4" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}${fingerprefix}_inner_finger_joint" has_pid="false" multiplier="-1.0" offset="0.0"/>
   </xacro:macro>
 
   <xacro:macro name="inner_finger_pad_joint" params="prefix fingerprefix">
@@ -251,30 +254,30 @@
   </xacro:macro>
 
   <xacro:macro name="pal_robotiq_coupling_link" params="prefix">
+    <material name="black">
+      <color rgba="0 0 0 1"/>
+    </material>
     <link name="${prefix}coupler_link">
-      <material name="black">
-        <color rgba="0 0 0 1"/>
-      </material>
-        <visual>
-            <origin xyz="0 0 0.0" rpy="3.1416 0 0" />
-            <geometry>
-                <mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/>
-            </geometry>
-            <material name="black"/>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0.0" rpy="3.1416 0 0" />
-            <geometry>
-                <mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <mass value="0.1" />
-            <origin xyz="0.0 0.0 0.0" />
-            <inertia ixx = "0.000001" ixy = "0.000000" ixz = "0.000000"
-                     iyx = "0.000000" iyy = "0.000001" iyz = "0.000000"
-                     izx = "0.000000" izy = "0.000000" izz = "0.000001" />
-        </inertial>
+      <visual>
+          <origin xyz="0 0 0.0" rpy="3.1416 0 0" />
+          <geometry>
+              <mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/>
+          </geometry>
+          <material name="black"/>
+      </visual>
+      <collision>
+          <origin xyz="0 0 0.0" rpy="3.1416 0 0" />
+          <geometry>
+              <mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/>
+          </geometry>
+      </collision>
+      <inertial>
+          <mass value="0.2" />
+          <origin xyz="0.0 0.0 -0.01" />
+          <inertia ixx = "0.000001" ixy = "0.000000" ixz = "0.000000"
+                   iyx = "0.000000" iyy = "0.000001" iyz = "0.000000"
+                   izx = "0.000000" izy = "0.000000" izz = "0.000001" />
+      </inertial>
     </link>
     <gazebo reference="${prefix}coupler_link">
       <mu1>0.9</mu1>
@@ -333,16 +336,8 @@
       <axis xyz="1 0 0" />
       <limit lower="0" upper="0.81" velocity="2.0" effort="1000" />
       <mimic joint="${prefix}finger_joint" multiplier="1" offset="0" />
-      <gazebo>
-        <!-- loading plugin: mimic joints works in gazebo now -->
-        <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_85_3">
-            <joint>${prefix}finger_joint</joint>
-            <mimicJoint>${prefix}right_outer_knuckle_joint</mimicJoint>
-            <!--multiplier>1.0</multiplier>
-            <offset>0.0</offset-->
-        </plugin>
-      </gazebo>
     </joint>
+    <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}mimic_robotiq_85_3" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}right_outer_knuckle_joint" has_pid="false" multiplier="1.0" offset="0.0"/>
     <xacro:finger_joints prefix="${prefix}" fingerprefix="right" reflect="-1.0"/>
   </xacro:macro>
 
