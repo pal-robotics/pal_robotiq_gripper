@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>pal_robotiq_85_controller_configuration</name>
+  <name>pal_robotiq_controller_configuration</name>
   <version>0.0.0</version>
-  <description>The pal_robotiq_85_controller_configuration package</description>
+  <description>The pal_robotiq_controller_configuration package</description>
 
   <author email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</author>
   <maintainer email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>

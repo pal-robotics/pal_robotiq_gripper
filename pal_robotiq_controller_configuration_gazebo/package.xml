@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>pal_robotiq_85_controller_configuration_gazebo</name>
+  <name>pal_robotiq_controller_configuration_gazebo</name>
   <version>0.0.0</version>
-  <description>Controllers configuration for Robotiq 85 gripper in Gazebo</description>
+  <description>Controllers configuration for Robotiq grippers in Gazebo</description>
   
   <author email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</author>
   <maintainer email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>

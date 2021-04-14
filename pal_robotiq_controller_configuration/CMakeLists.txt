@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(pal_robotiq_85_controller_configuration)
+project(pal_robotiq_controller_configuration)
 
 find_package(catkin REQUIRED)
 
