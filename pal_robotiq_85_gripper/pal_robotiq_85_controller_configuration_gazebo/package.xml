@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package>
+  <name>pal_robotiq_85_controller_configuration_gazebo</name>
+  <version>0.0.0</version>
+  <description>Controllers configuration for Robotiq 85 gripper in Gazebo</description>
+  
+  <author email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</author>
+  <maintainer email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
+  <license>Proprietary</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>control_msgs</run_depend>
+  <run_depend>trajectory_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend></package>
