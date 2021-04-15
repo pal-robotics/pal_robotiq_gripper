@@ -262,7 +262,7 @@
           <geometry>
               <mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/>
           </geometry>
-          <material name="black">
+          <material name="">
             <color rgba="0 0 0 1"/>
           </material>
       </visual>

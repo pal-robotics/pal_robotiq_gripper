@@ -266,16 +266,15 @@
   </xacro:macro>
 
   <xacro:macro name="pal_robotiq_coupling_link" params="prefix">
-    <material name="black">
-      <color rgba="0 0 0 1"/>
-    </material>
     <link name="${prefix}coupler_link">
       <visual>
           <origin xyz="0 0 0.0" rpy="3.1416 0 0" />
           <geometry>
               <mesh filename="package://pal_robotiq_85_description/meshes/visual/pal_robotiq_coupling.stl"/>
           </geometry>
-          <material name="black"/>
+          <material name="">
+            <color rgba="0 0 0 1"/>
+          </material>
       </visual>
       <collision>
           <origin xyz="0 0 0.0" rpy="3.1416 0 0" />
