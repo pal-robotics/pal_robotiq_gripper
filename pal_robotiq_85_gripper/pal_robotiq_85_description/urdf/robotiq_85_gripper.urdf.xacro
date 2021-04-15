@@ -228,9 +228,9 @@
    <xacro:macro name="robotiq_base_link" params="prefix">
     <link name="${prefix}base_link">
       <inertial>
-        <origin xyz="-0.00013 -0.00011 0.03284" rpy="0 0 0" />
-        <mass value="0.55938" />
-        <inertia ixx="605783E-9" ixy="-579.95E-9" ixz="2765.53E-9" iyy="720148E-9" iyz="618E-9" izz="510534E-9" />
+        <origin xyz="8.625E-08 -4.6583E-06 0.03145" rpy="0 0 0" />
+        <mass value="0.22652" />
+        <inertia ixx="0.00020005" ixy="-4.2442E-10" ixz="-2.9069E-10" iyy="0.00017832" iyz="-3.4402E-08" izz="0.00013478" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -244,7 +244,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-           <mesh filename="package://pal_robotiq_85_description/meshes/collision/robotiq_base_link.stl" />
+          <mesh filename="package://pal_robotiq_85_description/meshes/collision/robotiq_base_link.stl" />
         </geometry>
       </collision>
     </link>
