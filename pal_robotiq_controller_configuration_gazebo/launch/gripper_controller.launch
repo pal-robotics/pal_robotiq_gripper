@@ -10,6 +10,6 @@
   <node name="home_gripper$(arg suffix)" pkg="pal_robotiq_controller_configuration" type="home_gripper.py" output="screen">
     <param name="suffix" value="$(arg suffix)"/>
   </node>
-  <rosparam command="load" file="$(find pal_robotiq_controller_configuration_gazebo)/config/pids.yaml" ns="/gains" />
+  <rosparam command="load" file="$(find pal_robotiq_controller_configuration_gazebo)/config/pids$(arg suffix).yaml" ns="/gains" />
 </launch>
 

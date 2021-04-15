@@ -1,0 +1,1 @@
+gripper_right_finger_joint: {p: 250, d: 0, i: 0,   i_clamp: 3, torque_clamp: 60}
