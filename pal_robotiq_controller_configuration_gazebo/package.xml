@@ -11,4 +11,7 @@
   <run_depend>rospy</run_depend>
   <run_depend>control_msgs</run_depend>
   <run_depend>trajectory_msgs</run_depend>
-  <run_depend>sensor_msgs</run_depend></package>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>pal_robotiq_gripper_wrapper</run_depend>
+
+</package>

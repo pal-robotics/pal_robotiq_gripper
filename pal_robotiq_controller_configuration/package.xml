@@ -14,5 +14,6 @@
   <run_depend>controller_manager</run_depend>
   <run_depend>position_controllers</run_depend>
   <run_depend>joint_trajectory_controller</run_depend>
+  <run_depend>pal_robotiq_gripper_wrapper</run_depend>
 
 </package>

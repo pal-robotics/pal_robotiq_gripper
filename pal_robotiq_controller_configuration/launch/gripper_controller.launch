@@ -8,5 +8,10 @@
         args="--timeout 120
               gripper$(arg suffix)_controller" />
 
+  <include file="$(find pal_robotiq_gripper_wrapper)/launch/grasping_service.launch">
+    <arg name="model" value="$(arg model)"/>
+    <arg name="side" value="$(arg side)"/>
+  </include>
+
 </launch>
 
