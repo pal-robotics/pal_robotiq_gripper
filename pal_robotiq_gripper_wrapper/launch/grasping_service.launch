@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <arg name="side" default=""/>
+    <arg name="suffix" value="$(eval ('' if side == '' else '_' + side))"/>
+    <arg name="model"/> <!-- Current models are robotiq-2f-85 and robotiq-2f-140 -->
+    <node pkg="pal_robotiq_gripper_wrapper" name="gripper$(arg suffix)_grasping" type="gripper_grasping.py" output="screen">
+        <rosparam command="load" file="$(find pal_robotiq_gripper_wrapper)/config/$(arg model)_gripper$(arg suffix).yaml" />
+        <!-- Dynamic reconfigure parameters -->
+        <param name="grasper/max_position_error" type="double" value="0.002"/>
+        <param name="grasper/timeout" type="double" value="5.0"/>
+        <param name="grasper/closing_time" type="double" value="2.0"/>
+        <param name="grasper/rate" type="int" value="5"/>
+    </node>
+</launch>
