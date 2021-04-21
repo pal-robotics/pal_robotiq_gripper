@@ -3,8 +3,7 @@ project(pal_robotiq_controller_configuration)
 
 find_package(catkin REQUIRED)
 
-catkin_package(
-)
+catkin_package()
 
 foreach(dir config launch)
     install(DIRECTORY ${dir}/
