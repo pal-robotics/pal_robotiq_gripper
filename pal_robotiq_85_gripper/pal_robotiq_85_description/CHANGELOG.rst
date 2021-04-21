@@ -1,0 +1,22 @@
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package pal_robotiq_85_description
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Forthcoming
+-----------
+* Cleanup CMakeLists
+* fix the black material not unique issue
+* Update inertia parameters of base link of robotiq-2f-85
+* Update the gazebo material types
+* update the base link visual STL
+* fix the issue with the inner_finger link on wrong limits
+* Update inertias of the links to a proper functional one
+* more fixes+
+* Update URDF model with new meshes and some changes to mimic joints naming
+* Update URDF of robotiq 85
+* added black material color to the coupling visual
+* Move the coupling link into the macro and update links
+* Update URDF from ROS Industrial repo
+* updates files to use right and left naming
+* added the first version of robotiq 85 gripper
+* Contributors: Sai Kishor Kothakota
