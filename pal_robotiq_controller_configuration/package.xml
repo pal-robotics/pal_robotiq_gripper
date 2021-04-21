@@ -7,7 +7,6 @@
   <author email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</author>
   <maintainer email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
 
-
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>

@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(pal_robotiq_85_description)
 
-find_package(catkin REQUIRED COMPONENTS
-  xacro
-)
+find_package(catkin REQUIRED)
 
 ###################################
 ## catkin specific configuration ##
