@@ -2,6 +2,11 @@
 Changelog for package pal_robotiq_140_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fixed some minor package configurations and licenses
+* Contributors: Sai Kishor Kothakota
+
 0.0.1 (2021-04-21)
 ------------------
 * Cleanup CMakeLists
