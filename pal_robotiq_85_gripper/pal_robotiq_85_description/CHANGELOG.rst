@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_85_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2021-04-21)
+------------------
 * Cleanup CMakeLists
 * fix the black material not unique issue
 * Update inertia parameters of base link of robotiq-2f-85
