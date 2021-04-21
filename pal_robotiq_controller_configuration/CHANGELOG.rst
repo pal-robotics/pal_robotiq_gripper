@@ -2,6 +2,11 @@
 Changelog for package pal_robotiq_controller_configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* more cleanup and fix the missing config folder in the install rules
+* Contributors: Sai Kishor Kothakota
+
 0.0.2 (2021-04-21)
 ------------------
 * fixed some minor package configurations and licenses
