@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_140_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2021-04-21)
+------------------
 * fixed some minor package configurations and licenses
 * Contributors: Sai Kishor Kothakota
 
