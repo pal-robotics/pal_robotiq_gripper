@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.3 (2021-04-21)
 ------------------
 * more cleanup and fix the missing config folder in the install rules

@@ -2,6 +2,11 @@
 Changelog for package pal_robotiq_140_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix the transmission naming
+* Contributors: Sai Kishor Kothakota
+
 0.0.3 (2021-04-21)
 ------------------
 
