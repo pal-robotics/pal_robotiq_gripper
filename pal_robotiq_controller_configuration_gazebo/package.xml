@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>pal_robotiq_controller_configuration_gazebo</name>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
   <description>Controllers configuration for Robotiq grippers in Gazebo</description>
   
   <author email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</author>
