@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_85_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.4 (2021-05-04)
 ------------------
 * fix the transmission naming

@@ -2,6 +2,14 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'grasp_fix' into 'master'
+  Fix grasping service
+  See merge request robots/pal_robotiq_gripper!1
+* Fix grasping service
+* Contributors: saikishor, thomaspeyrucain
+
 0.0.4 (2021-05-04)
 ------------------
 
