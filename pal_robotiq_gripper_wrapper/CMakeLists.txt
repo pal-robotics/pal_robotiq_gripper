@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   control_msgs
   rospy
   trajectory_msgs
+  std_msgs
 )
 
 catkin_package(

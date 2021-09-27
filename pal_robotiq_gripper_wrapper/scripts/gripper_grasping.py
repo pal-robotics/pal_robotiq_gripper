@@ -10,6 +10,7 @@ so to skip overheating.
 
 import rospy
 from control_msgs.msg import JointTrajectoryControllerState
+from std_msgs.msg import String, UInt8
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from std_srvs.srv import Empty, EmptyResponse
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
@@ -141,7 +142,55 @@ class GripperGraspService(object):
         self.cmd_pub.publish(jt)
 
 
+class GripperGraspStatus(object):
+    def __init__(self):
+        rospy.loginfo("Initializing Gripper Grasper Status ...")
+        self.sub_gs = rospy.Subscriber("gripper_motor/gripper_status",
+                         UInt8, self.state_cb, queue_size=1)
+        self.pub_gth = rospy.Publisher("gripper_status_human", String, queue_size=1)
+        # self.sub = rospy.Subscriber("gripper_motor/gripper_status",
+        #                  UInt8, self.state_cb, queue_size=1)
+        # self.pub = rospy.Publisher("gripper_status_human", String, queue_size=1)
+        
+
+    def state_cb(self, data):
+        # publish data to topic translated to human understanding
+        bin_number = bin(int(data,2))[2:].zfill(8)  # data range: 0 -> 255
+        gOBJ = hex(int(bin_number,2)[:2])
+        gSTA = hex(int(bin_number,2)[2:4])
+        gGTO = hex(int(bin_number,2)[4])
+        gACT = hex(int(bin_number,2)[7])
+
+        rospy.loginfo("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
+        self.pub_gth.publish("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
+
+    def hex_to_human(self, gOBJ, gSTA, gGTO, gACT):
+        gOBJ_dict = {"0x0": "Fingers are in motion towards requested position. No object detected",
+                     "0x1": "Fingers have stopped due to a contact while opening before requested position. Object detected opening",
+                     "0x2": "Fingers have stopped due to a contact while closing before requested position. Object detected closing",
+                     "0x3": "Fingers are at requested position. No object detected or object has been loss / dropped"}
+
+        gSTA_dict = {"0x0": "Gripper is in reset ( or automatic release ) state. See Fault Status if gripper is activated",
+                     "0x1": "Activation in progress", "0x2": "Not used", "0x3": "Activation is completed"}
+
+        gGTO_dict = {"0x0": "Stopped (or performing activation / automatic release)",
+                     "0x1": "Go to Position Request"}
+
+        gACT_dict = {"0x0": "Gripper reset",
+                     "0x1": "Gripper activation"}
+        try:
+            res = gACT_dict[gACT] + " " + gGTO_dict[gGTO] + " " + gSTA_dict[gSTA] + " " + jOBJ_dict[gOBJ]
+        except Exception:
+            rospy.logerr("Not able to decode hex codes in gOBJ, gSTA, gGTO, gACT")
+        return res
+    
+    # TODO: sub to /joint_states msg: sensor_msgs/JointState
+    # TODO: translate position using formula https://docs.google.com/spreadsheets/d/1UbA8CLmDVlxi3S_ETz7UTv8AqJj86mhsNu1IXPgQgMk/edit#gid=0
+    # y = -113*x +87
+
+
 if __name__ == '__main__':
     rospy.init_node('gripper_grasping')
     gg = GripperGraspService()
+    # gg_stat = GripperGraspStatus()
     rospy.spin()
