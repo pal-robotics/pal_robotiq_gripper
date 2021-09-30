@@ -113,7 +113,7 @@ class GripperGraspService(object):
         on_optimal_close = False
         while not rospy.is_shutdown() and \
                   (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
-                  not on_optimal_close:
+                  not on_optimal_close and self.last_state:
             for index in range(len(self.last_state.error.positions)):
                 if self.last_state.error.positions[index] > self.max_position_error:
                     rospy.logdebug("Over error joint {}...".format(index))
@@ -155,11 +155,13 @@ class GripperGraspStatus(object):
 
     def state_cb(self, data):
         # publish data to topic translated to human understanding
-        bin_number = bin(int(data,2))[2:].zfill(8)  # data range: 0 -> 255
-        gOBJ = hex(int(bin_number,2)[:2])
-        gSTA = hex(int(bin_number,2)[2:4])
-        gGTO = hex(int(bin_number,2)[4])
-        gACT = hex(int(bin_number,2)[7])
+        print("DEBUG: ")
+        # data = 
+        bin_number = bin(data.data)[2:].zfill(8)  # data range: 0 -> 255
+        gOBJ = hex(int(bin_number[:2],2))
+        gSTA = hex(int(bin_number[2:4],2))
+        gGTO = hex(int(bin_number[4],2))
+        gACT = hex(int(bin_number[7],2))
 
         rospy.loginfo("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
         self.pub_gth.publish("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
@@ -179,9 +181,10 @@ class GripperGraspStatus(object):
         gACT_dict = {"0x0": "Gripper reset",
                      "0x1": "Gripper activation"}
         try:
-            res = gACT_dict[gACT] + " " + gGTO_dict[gGTO] + " " + gSTA_dict[gSTA] + " " + jOBJ_dict[gOBJ]
+            res = gACT_dict[gACT] + " " + gGTO_dict[gGTO] + " " + gSTA_dict[gSTA] + " " + gOBJ_dict[gOBJ]
         except Exception:
             rospy.logerr("Not able to decode hex codes in gOBJ, gSTA, gGTO, gACT")
+            res = None
         return res
     
     # TODO: sub to /joint_states msg: sensor_msgs/JointState
@@ -192,5 +195,5 @@ class GripperGraspStatus(object):
 if __name__ == '__main__':
     rospy.init_node('gripper_grasping')
     gg = GripperGraspService()
-    # gg_stat = GripperGraspStatus()
+    gg_stat = GripperGraspStatus()
     rospy.spin()
