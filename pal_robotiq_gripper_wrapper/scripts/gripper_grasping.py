@@ -13,6 +13,7 @@ from control_msgs.msg import JointTrajectoryControllerState
 from std_msgs.msg import String, UInt8
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from std_srvs.srv import Empty, EmptyResponse
+from sensor_msgs.msg import JointState
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 
 
@@ -145,15 +146,17 @@ class GripperGraspService(object):
 class GripperGraspStatus(object):
     def __init__(self):
         rospy.loginfo("Initializing Gripper Grasper Status ...")
+        # Publish a human readable status of the gripper
         self.sub_gs = rospy.Subscriber("gripper_motor/gripper_status",
-                         UInt8, self.state_cb, queue_size=1)
+                         UInt8, self.grip_status_cb, queue_size=1)
         self.pub_gth = rospy.Publisher("gripper_status_human", String, queue_size=1)
-        # self.sub = rospy.Subscriber("gripper_motor/gripper_status",
-        #                  UInt8, self.state_cb, queue_size=1)
-        # self.pub = rospy.Publisher("gripper_status_human", String, queue_size=1)
+        # Publish gripper state (position and current) and translates position to real distance between fingers (robotiq gripper 85)
+        self.sub_js = rospy.Subscriber("joint_states", JointState, self.joint_state_cb, queue_size=1)
+        self.pub_js = rospy.Publisher("gripper_joint_state", JointState, queue_size=1)
+        self.ee = rospy.get_param("pal_robot_info/end_effector") 
         
 
-    def state_cb(self, data):
+    def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
         print("DEBUG: ")
         # data = 
@@ -186,10 +189,24 @@ class GripperGraspStatus(object):
             rospy.logerr("Not able to decode hex codes in gOBJ, gSTA, gGTO, gACT")
             res = None
         return res
+
+    def joint_state_cb(self, data):
+        gfj_index = data.name.index("gripper_finger_joint")
+        data.name = ["gripper_finger_joint"]
+        data.position = [data.position[gfj_index]]
+        data.velocity = [self.gripper_pos_to_dist(data.position[0])]
+        data.effort = [data.effort[gfj_index]]
+        self.pub_js.publish(data)
+
+    def gripper_pos_to_dist(self, pos):
+        
+        if self.ee == "robotiq-2f-85":
+            # Empiric formula https://docs.google.com/spreadsheets/d/1UbA8CLmDVlxi3S_ETz7UTv8AqJj86mhsNu1IXPgQgMk/edit#gid=0
+            res = -113*pos + 87
+        else:
+            res = pos
+        return res
     
-    # TODO: sub to /joint_states msg: sensor_msgs/JointState
-    # TODO: translate position using formula https://docs.google.com/spreadsheets/d/1UbA8CLmDVlxi3S_ETz7UTv8AqJj86mhsNu1IXPgQgMk/edit#gid=0
-    # y = -113*x +87
 
 
 if __name__ == '__main__':
