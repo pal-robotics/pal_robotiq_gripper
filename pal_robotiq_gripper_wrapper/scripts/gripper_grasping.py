@@ -14,6 +14,7 @@ from std_msgs.msg import String, UInt8
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from std_srvs.srv import Empty, EmptyResponse
 from sensor_msgs.msg import JointState
+from pal_robotiq_gripper_wrapper_msgs.msg import GripperStatus
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 
 
@@ -152,7 +153,7 @@ class GripperGraspStatus(object):
         self.pub_gth = rospy.Publisher("gripper_status_human", String, queue_size=1)
         # Publish gripper state (position and current) and translates position to real distance between fingers (robotiq gripper 85)
         self.sub_js = rospy.Subscriber("joint_states", JointState, self.joint_state_cb, queue_size=1)
-        self.pub_js = rospy.Publisher("gripper_joint_state", JointState, queue_size=1)
+        self.pub_js = rospy.Publisher("gripper_joint_state", GripperStatus, queue_size=1)
         self.ee = rospy.get_param("pal_robot_info/end_effector") 
         
 
@@ -192,17 +193,19 @@ class GripperGraspStatus(object):
 
     def joint_state_cb(self, data):
         gfj_index = data.name.index("gripper_finger_joint")
-        data.name = ["gripper_finger_joint"]
-        data.position = [data.position[gfj_index]]
-        data.velocity = [self.gripper_pos_to_dist(data.position[0])]
-        data.effort = [data.effort[gfj_index]]
-        self.pub_js.publish(data)
+        gripper_status_msg = GripperStatus()
+        gripper_status_msg.header = data.header
+        gripper_status_msg.name = data.name[gfj_index]
+        gripper_status_msg.position = data.position[gfj_index]
+        gripper_status_msg.fingers_distance = self.gripper_pos_to_dist(data.position[0])
+        gripper_status_msg.effort = data.effort[gfj_index]
+        self.pub_js.publish(gripper_status_msg)
 
     def gripper_pos_to_dist(self, pos):
         
         if self.ee == "robotiq-2f-85":
             # Empiric formula https://docs.google.com/spreadsheets/d/1UbA8CLmDVlxi3S_ETz7UTv8AqJj86mhsNu1IXPgQgMk/edit#gid=0
-            res = -113*pos + 87
+            res = (-113*pos + 87)/100 # cm to m
         else:
             res = pos
         return res
