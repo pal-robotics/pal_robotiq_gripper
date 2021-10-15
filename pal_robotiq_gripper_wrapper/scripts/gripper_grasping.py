@@ -159,8 +159,6 @@ class GripperGraspStatus(object):
 
     def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
-        print("DEBUG: ")
-        # data = 
         bin_number = bin(data.data)[2:].zfill(8)  # data range: 0 -> 255
         gOBJ = hex(int(bin_number[:2],2))
         gSTA = hex(int(bin_number[2:4],2))
@@ -188,6 +186,10 @@ class GripperGraspStatus(object):
             res = gACT_dict[gACT] + " " + gGTO_dict[gGTO] + " " + gSTA_dict[gSTA] + " " + gOBJ_dict[gOBJ]
         except Exception:
             rospy.logerr("Not able to decode hex codes in gOBJ, gSTA, gGTO, gACT")
+            rospy.logerr("gOBJ hex: "+str(gOBJ))
+            rospy.logerr("gSTA hex: "+str(gSTA))
+            rospy.logerr("gGTO hex: "+str(gGTO))
+            rospy.logerr("gACT hex: "+str(gACT))
             res = None
         return res
 
