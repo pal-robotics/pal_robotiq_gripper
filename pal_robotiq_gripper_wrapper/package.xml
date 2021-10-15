@@ -3,7 +3,8 @@
   <name>pal_robotiq_gripper_wrapper</name>
   <version>0.0.5</version>
   <description>The pal_robotiq_gripper_wrapper package</description>
-
+  
+  <maintainer email="daniel.lopez@pal-robotics.com">Daniel López Puig</maintainer>
   <maintainer email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
   <author email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</author>
 
