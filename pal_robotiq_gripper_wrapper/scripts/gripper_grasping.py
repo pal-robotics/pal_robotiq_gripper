@@ -146,6 +146,7 @@ class GripperGraspService(object):
 
 class GripperGraspStatus(object):
     def __init__(self):
+        # TODO: Enable current functionality if tiago dual and both ee are robotiq-2f
         rospy.loginfo("Initializing Gripper Grasper Status ...")
         # Publish a human readable status of the gripper
         self.gripper_motor_name = rospy.get_param("~gripper_motor_name", None)
@@ -154,10 +155,19 @@ class GripperGraspStatus(object):
         self.pub_gth = rospy.Publisher("{}/gripper_status_human".format(self.gripper_motor_name), String, queue_size=1)
         # Publish gripper state (position and current) and translates position to real distance between fingers (robotiq gripper 85)
         self.sub_js = rospy.Subscriber("joint_states", JointState, self.joint_state_cb, queue_size=1)
-        self.ee = rospy.get_param("~model")
-        self.gripper_joint_name = rospy.get_param("~gripper_joint_name")
-        self.pub_js = rospy.Publisher("{}/state".format(self.gripper_joint_name.replace('_finger', '')), GripperStatus, queue_size=1)
-
+        self.pub_js = rospy.Publisher("gripper_joint_state", GripperStatus, queue_size=1)
+        print(rospy.get_param("pal_robot_info/type"))
+        self.tiago_type = "tiago"
+        self.robotiq_side = ""
+        if rospy.get_param("pal_robot_info/type") == "tiago_dual":
+            self.tiago_type = "tiago_dual"
+            for side in ("right","left"):
+                if "robotiq-2f" in rospy.get_param("pal_robot_info/end_effector_"+side):
+                    self.ee = rospy.get_param("pal_robot_info/end_effector_"+side)
+                    self.robotiq_side = "_"+side
+        else:
+            self.ee = rospy.get_param("pal_robot_info/end_effector") 
+        
     def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
         bin_number = bin(data.data)[2:].zfill(8)  # data range: 0 -> 255
@@ -195,7 +205,7 @@ class GripperGraspStatus(object):
         return res
 
     def joint_state_cb(self, data):
-        gfj_index = data.name.index(self.gripper_joint_name)
+        gfj_index = data.name.index("gripper"+self.robotiq_side+"_finger_joint")
         gripper_status_msg = GripperStatus()
         gripper_status_msg.header = data.header
         gripper_status_msg.name = data.name[gfj_index]
@@ -220,3 +230,4 @@ if __name__ == '__main__':
     gg = GripperGraspService()
     gg_stat = GripperGraspStatus()
     rospy.spin()
+
