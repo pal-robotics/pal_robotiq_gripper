@@ -200,7 +200,7 @@ class GripperGraspStatus(object):
         gripper_status_msg.header = data.header
         gripper_status_msg.name = data.name[gfj_index]
         gripper_status_msg.position = data.position[gfj_index]
-        gripper_status_msg.fingers_distance = self.gripper_pos_to_dist(data.position[0])
+        gripper_status_msg.fingers_distance = self.gripper_pos_to_dist(data.position[gfj_index])
         gripper_status_msg.effort = data.effort[gfj_index]
         self.pub_js.publish(gripper_status_msg)
 
