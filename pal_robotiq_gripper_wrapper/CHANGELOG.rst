@@ -2,6 +2,19 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'object-detection' into 'master'
+  object-detection
+  See merge request robots/pal_robotiq_gripper!2
+* chore: MR changes printing better log info
+* fix: add GripperStatus msg instead of reusing JointState msg
+* feat: GripperStatus msg
+* feat: publish position in mm
+* fix: gripper_status_human
+* WIP: feat: gripper grasp status
+* Contributors: Jordan Palacios, daniellopez
+
 0.0.5 (2021-09-07)
 ------------------
 * Merge branch 'grasp_fix' into 'master'
