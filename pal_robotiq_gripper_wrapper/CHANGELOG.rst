@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.6 (2021-11-09)
+------------------
 * Merge branch 'object-detection' into 'master'
   object-detection
   See merge request robots/pal_robotiq_gripper!2
