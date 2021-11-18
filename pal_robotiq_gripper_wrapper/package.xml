@@ -19,6 +19,7 @@
   <run_depend>control_msgs</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>trajectory_msgs</run_depend>
+  <run_depend>pal_robotiq_gripper_wrapper_msgs</run_depend>
   <run_depend>ddynamic_reconfigure_python</run_depend>
 
 </package>
