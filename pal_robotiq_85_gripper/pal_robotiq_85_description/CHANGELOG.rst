@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_85_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.6 (2021-11-09)
 ------------------
 

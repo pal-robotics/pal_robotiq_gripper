@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_gripper_wrapper_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.6 (2021-11-09)
 ------------------
 * fix the tag

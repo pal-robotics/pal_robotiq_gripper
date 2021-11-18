@@ -2,6 +2,16 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'robotiq_fixes' into 'master'
+  Robotiq fixes
+  See merge request robots/pal_robotiq_gripper!4
+* Fix the bugs in the gripper_grasping file and added compatibility to TIAGo++
+* added gripper_motor_name argument to the config files
+* added missing pal_robotiq_gripper_wrapper_msgs dependency
+* Contributors: Sai Kishor Kothakota, saikishor
+
 0.0.6 (2021-11-09)
 ------------------
 * Merge branch 'object-detection' into 'master'

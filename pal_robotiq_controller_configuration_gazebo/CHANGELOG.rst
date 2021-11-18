@@ -2,6 +2,14 @@
 Changelog for package pal_robotiq_controller_configuration_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'robotiq_fixes' into 'master'
+  Robotiq fixes
+  See merge request robots/pal_robotiq_gripper!4
+* added missing roboticsgroup_gazebo_plugins gazebo plugin dependency
+* Contributors: Sai Kishor Kothakota, saikishor
+
 0.0.6 (2021-11-09)
 ------------------
 
