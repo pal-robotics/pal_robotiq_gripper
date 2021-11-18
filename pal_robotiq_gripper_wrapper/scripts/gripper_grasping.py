@@ -148,14 +148,15 @@ class GripperGraspStatus(object):
     def __init__(self):
         rospy.loginfo("Initializing Gripper Grasper Status ...")
         # Publish a human readable status of the gripper
-        self.sub_gs = rospy.Subscriber("gripper_motor/gripper_status",
+        self.gripper_motor_name = rospy.get_param("~gripper_motor_name", None)
+        self.sub_gs = rospy.Subscriber("{}/gripper_status".format(self.gripper_motor_name),
                          UInt8, self.grip_status_cb, queue_size=1)
-        self.pub_gth = rospy.Publisher("gripper_status_human", String, queue_size=1)
+        self.pub_gth = rospy.Publisher("{}/gripper_status_human".format(self.gripper_motor_name), String, queue_size=1)
         # Publish gripper state (position and current) and translates position to real distance between fingers (robotiq gripper 85)
         self.sub_js = rospy.Subscriber("joint_states", JointState, self.joint_state_cb, queue_size=1)
-        self.pub_js = rospy.Publisher("gripper_joint_state", GripperStatus, queue_size=1)
-        self.ee = rospy.get_param("pal_robot_info/end_effector") 
-        
+        self.ee = rospy.get_param("~model")
+        self.gripper_joint_name = rospy.get_param("~gripper_joint_name")
+        self.pub_js = rospy.Publisher("{}/state".format(self.gripper_joint_name.replace('_finger', '')), GripperStatus, queue_size=1)
 
     def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
@@ -194,7 +195,7 @@ class GripperGraspStatus(object):
         return res
 
     def joint_state_cb(self, data):
-        gfj_index = data.name.index("gripper_finger_joint")
+        gfj_index = data.name.index(self.gripper_joint_name)
         gripper_status_msg = GripperStatus()
         gripper_status_msg.header = data.header
         gripper_status_msg.name = data.name[gfj_index]
