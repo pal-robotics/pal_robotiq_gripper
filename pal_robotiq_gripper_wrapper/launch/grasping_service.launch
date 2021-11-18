@@ -10,5 +10,6 @@
         <param name="grasper/timeout" type="double" value="5.0"/>
         <param name="grasper/closing_time" type="double" value="2.0"/>
         <param name="grasper/rate" type="int" value="5"/>
+        <param name="model" type="string" value="$(arg model)"/>
     </node>
 </launch>
