@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.7 (2021-11-18)
+------------------
 * Merge branch 'robotiq_fixes' into 'master'
   Robotiq fixes
   See merge request robots/pal_robotiq_gripper!4
