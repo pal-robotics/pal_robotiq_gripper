@@ -8,4 +8,4 @@ real_joint_names: ['gripper_right_finger_joint']
 close_configuration: [0.7]
 # Joint name for the parallel_gripper joint
 gripper_joint_name: 'gripper_right_finger_joint'
-
+gripper_motor_name: 'gripper_right_motor'
