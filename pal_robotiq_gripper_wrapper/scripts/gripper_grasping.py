@@ -14,7 +14,7 @@ from std_msgs.msg import String, UInt8
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from std_srvs.srv import Empty, EmptyResponse
 from sensor_msgs.msg import JointState
-from pal_robotiq_gripper_wrapper_msgs.msg import GripperStatus
+from std_msgs.msg import Bool
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 
 
@@ -152,10 +152,9 @@ class GripperGraspStatus(object):
         self.gripper_motor_name = rospy.get_param("~gripper_motor_name", None)
         self.sub_gs = rospy.Subscriber("{}/gripper_status".format(self.gripper_motor_name),
                          UInt8, self.grip_status_cb, queue_size=1)
-        self.pub_gth = rospy.Publisher("{}/gripper_status_human".format(self.gripper_motor_name), String, queue_size=1)
-        # Publish gripper state (position and current) and translates position to real distance between fingers (robotiq gripper 85)
-        self.sub_js = rospy.Subscriber("joint_states", JointState, self.joint_state_cb, queue_size=1)
-        self.pub_js = rospy.Publisher("gripper_joint_state", GripperStatus, queue_size=1)
+        self.pub_gth = rospy.Publisher("gripper_status_human", String, queue_size=1)
+        # Publish a boolean to know if an object is grasped or not
+        self.pub_js = rospy.Publisher("is_grasped", Bool , queue_size=1)
         print(rospy.get_param("pal_robot_info/type"))
         self.tiago_type = "tiago"
         self.robotiq_side = ""
@@ -176,8 +175,17 @@ class GripperGraspStatus(object):
         gGTO = hex(int(bin_number[4],2))
         gACT = hex(int(bin_number[7],2))
 
+        is_grasped_msg = False;
+        if(str(gOBJ) == "0x1" or str(gOBJ) == "0x2"):
+            is_grasped_msg = True;
+        else:
+            is_grasped_msg = False;
+        self.pub_js.publish(is_grasped_msg)
+
         rospy.loginfo("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
         self.pub_gth.publish("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
+
+
 
     def hex_to_human(self, gOBJ, gSTA, gGTO, gACT):
         gOBJ_dict = {"0x0": "Fingers are in motion towards requested position. No object detected",
@@ -203,16 +211,6 @@ class GripperGraspStatus(object):
             rospy.logerr("gACT hex: "+str(gACT))
             res = None
         return res
-
-    def joint_state_cb(self, data):
-        gfj_index = data.name.index("gripper"+self.robotiq_side+"_finger_joint")
-        gripper_status_msg = GripperStatus()
-        gripper_status_msg.header = data.header
-        gripper_status_msg.name = data.name[gfj_index]
-        gripper_status_msg.position = data.position[gfj_index]
-        gripper_status_msg.fingers_distance = self.gripper_pos_to_dist(data.position[gfj_index])
-        gripper_status_msg.effort = data.effort[gfj_index]
-        self.pub_js.publish(gripper_status_msg)
 
     def gripper_pos_to_dist(self, pos):
         
