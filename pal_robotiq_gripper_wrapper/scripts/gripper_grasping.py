@@ -112,7 +112,7 @@ class GripperGraspService(object):
         self.send_close(closing_amount)
         rospy.sleep(self.closing_time)
         r = rospy.Rate(self.rate)
-        on_optimal_close = False
+        on_optimal_close = bool(False)
         while not rospy.is_shutdown() and \
                   (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
                   not on_optimal_close and self.last_state:
@@ -120,7 +120,7 @@ class GripperGraspService(object):
                 if self.last_state.error.positions[index] > self.max_position_error:
                     rospy.logdebug("Over error joint {}...".format(index))
                     closing_amount = self.get_optimal_close()
-                    on_optimal_close = True
+                    on_optimal_close = bool(True)
             self.send_close(closing_amount)
             r.sleep()
 
@@ -175,11 +175,11 @@ class GripperGraspStatus(object):
         gGTO = hex(int(bin_number[4],2))
         gACT = hex(int(bin_number[7],2))
 
-        is_grasped_msg = False;
+        is_grasped_msg = Bool();
         if(str(gOBJ) == "0x1" or str(gOBJ) == "0x2"):
-            is_grasped_msg = True;
+            is_grasped_msg.data = True;
         else:
-            is_grasped_msg = False;
+            is_grasped_msg.data = False;
         self.pub_js.publish(is_grasped_msg)
 
         rospy.loginfo("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
