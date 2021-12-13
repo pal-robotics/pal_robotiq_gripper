@@ -112,7 +112,7 @@ class GripperGraspService(object):
         self.send_close(closing_amount)
         rospy.sleep(self.closing_time)
         r = rospy.Rate(self.rate)
-        on_optimal_close = bool(False)
+        on_optimal_close = False
         while not rospy.is_shutdown() and \
                   (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
                   not on_optimal_close and self.last_state:
@@ -120,7 +120,7 @@ class GripperGraspService(object):
                 if self.last_state.error.positions[index] > self.max_position_error:
                     rospy.logdebug("Over error joint {}...".format(index))
                     closing_amount = self.get_optimal_close()
-                    on_optimal_close = bool(True)
+                    on_optimal_close = True
             self.send_close(closing_amount)
             r.sleep()
 
