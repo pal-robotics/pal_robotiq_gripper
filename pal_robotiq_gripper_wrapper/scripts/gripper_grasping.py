@@ -18,13 +18,12 @@ from std_msgs.msg import Bool
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 
 
-class GripperGraspService(object):
+class GripperGrasp(object):
     def __init__(self):
         rospy.loginfo("Initializing Gripper Grasper...")
 
         # Get the params from param server
         self.last_state = None
-        self.is_grasped = False;
         self.controller_name = rospy.get_param("~controller_name", None)
         if not self.controller_name:
             rospy.logerr("No controller name found in param: ~controller_name")
@@ -75,14 +74,6 @@ class GripperGraspService(object):
         rospy.loginfo("Subscribed to topic: " +
                       str(self.state_sub.resolved_name))
 
-        # Subscriber to the gripper state
-        self.is_grasped_sub = rospy.Subscriber('/is_grasped',
-                                          Bool,
-                                          self.is_grasped_cb,
-                                          queue_size=1)
-        rospy.loginfo("Subscribed to topic: " +
-                      str(self.is_grasped_sub.resolved_name))
-
         # Publisher on the gripper command topic
         self.cmd_pub = rospy.Publisher('/' + self.controller_name + '_controller/command',
                                        JointTrajectory,
@@ -98,6 +89,29 @@ class GripperGraspService(object):
                       str(self.grasp_srv.resolved_name))
         rospy.loginfo("Done initializing Gripper Grasp Service!")
 
+        # Init Grasp Status
+        # TODO: Enable current functionality if tiago dual and both ee are robotiq-2f
+        # Publish a human readable status of the gripper
+        self.sub_gs = rospy.Subscriber("gripper_motor/gripper_status",
+                         UInt8, self.grip_status_cb, queue_size=1)
+        self.pub_gth = rospy.Publisher("gripper_status_human", String, queue_size=1)
+        # Publish a boolean to know if an object is grasped or not
+        self.pub_js = rospy.Publisher("is_grasped", Bool , queue_size=1)
+        print(rospy.get_param("pal_robot_info/type"))
+        self.tiago_type = "tiago"
+        self.robotiq_side = ""
+        if rospy.get_param("pal_robot_info/type") == "tiago_dual":
+            self.tiago_type = "tiago_dual"
+            for side in ("right","left"):
+                if "robotiq-2f" in rospy.get_param("pal_robot_info/end_effector_"+side):
+                    self.ee = rospy.get_param("pal_robot_info/end_effector_"+side)
+                    self.robotiq_side = "_"+side
+        else:
+            self.ee = rospy.get_param("pal_robot_info/end_effector")
+
+        self.is_grasped_msg = Bool();
+
+
     def ddr_cb(self, config, level):
         self.max_position_error = config['max_position_error']
         self.timeout = config['timeout']
@@ -107,9 +121,6 @@ class GripperGraspService(object):
 
     def state_cb(self, data):
         self.last_state = data
-
-    def is_grasped_cb(self, data):
-        self.is_grasped = data.data
 
     def grasp_cb(self, req):
         rospy.logdebug("Received grasp request!")
@@ -128,7 +139,7 @@ class GripperGraspService(object):
         while not rospy.is_shutdown() and \
                   (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
                   not on_optimal_close and self.last_state:
-            if self.is_grasped == True:
+            if self.is_grasped_msg.data == True:
                 closing_amount = self.last_state.actual.positions
                 on_optimal_close = True
             self.send_close(closing_amount)
@@ -146,30 +157,6 @@ class GripperGraspService(object):
         jt.points.append(p)
 
         self.cmd_pub.publish(jt)
-
-
-class GripperGraspStatus(object):
-    def __init__(self):
-        # TODO: Enable current functionality if tiago dual and both ee are robotiq-2f
-        rospy.loginfo("Initializing Gripper Grasper Status ...")
-        # Publish a human readable status of the gripper
-        self.gripper_motor_name = rospy.get_param("~gripper_motor_name", None)
-        self.sub_gs = rospy.Subscriber("{}/gripper_status".format(self.gripper_motor_name),
-                         UInt8, self.grip_status_cb, queue_size=1)
-        self.pub_gth = rospy.Publisher("gripper_status_human", String, queue_size=1)
-        # Publish a boolean to know if an object is grasped or not
-        self.pub_js = rospy.Publisher("is_grasped", Bool , queue_size=1)
-        print(rospy.get_param("pal_robot_info/type"))
-        self.tiago_type = "tiago"
-        self.robotiq_side = ""
-        if rospy.get_param("pal_robot_info/type") == "tiago_dual":
-            self.tiago_type = "tiago_dual"
-            for side in ("right","left"):
-                if "robotiq-2f" in rospy.get_param("pal_robot_info/end_effector_"+side):
-                    self.ee = rospy.get_param("pal_robot_info/end_effector_"+side)
-                    self.robotiq_side = "_"+side
-        else:
-            self.ee = rospy.get_param("pal_robot_info/end_effector") 
         
     def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
@@ -178,13 +165,11 @@ class GripperGraspStatus(object):
         gSTA = hex(int(bin_number[2:4],2))
         gGTO = hex(int(bin_number[4],2))
         gACT = hex(int(bin_number[7],2))
-
-        is_grasped_msg = Bool();
         if(str(gOBJ) == "0x1" or str(gOBJ) == "0x2"):
-            is_grasped_msg.data = True;
+            self.is_grasped_msg.data = True;
         else:
-            is_grasped_msg.data = False;
-        self.pub_js.publish(is_grasped_msg)
+            self.is_grasped_msg.data = False;
+        self.pub_js.publish(self.is_grasped_msg)
 
         rospy.loginfo("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
         self.pub_gth.publish("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
@@ -229,7 +214,6 @@ class GripperGraspStatus(object):
 
 if __name__ == '__main__':
     rospy.init_node('gripper_grasping')
-    gg = GripperGraspService()
-    gg_stat = GripperGraspStatus()
+    gg = GripperGrasp()
     rospy.spin()
 
