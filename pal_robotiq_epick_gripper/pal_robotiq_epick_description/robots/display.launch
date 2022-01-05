@@ -1,0 +1,8 @@
+<launch>
+  <arg name="gui" default="True" />
+  <include file="$(find pal_robotiq_epick_description)/robots/upload.launch"/>
+  <param name="use_gui" value="$(arg gui)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pal_robotiq_epick_description)/urdf.rviz" required="true" />
+</launch>
