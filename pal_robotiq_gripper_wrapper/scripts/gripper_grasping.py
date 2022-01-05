@@ -24,6 +24,7 @@ class GripperGraspService(object):
 
         # Get the params from param server
         self.last_state = None
+        self.is_grasped = False;
         self.controller_name = rospy.get_param("~controller_name", None)
         if not self.controller_name:
             rospy.logerr("No controller name found in param: ~controller_name")
@@ -74,6 +75,14 @@ class GripperGraspService(object):
         rospy.loginfo("Subscribed to topic: " +
                       str(self.state_sub.resolved_name))
 
+        # Subscriber to the gripper state
+        self.is_grasped_sub = rospy.Subscriber('/is_grasped',
+                                          Bool,
+                                          self.is_grasped_cb,
+                                          queue_size=1)
+        rospy.loginfo("Subscribed to topic: " +
+                      str(self.is_grasped_sub.resolved_name))
+
         # Publisher on the gripper command topic
         self.cmd_pub = rospy.Publisher('/' + self.controller_name + '_controller/command',
                                        JointTrajectory,
@@ -99,6 +108,9 @@ class GripperGraspService(object):
     def state_cb(self, data):
         self.last_state = data
 
+    def is_grasped_cb(self, data):
+        self.is_grasped = data.data
+
     def grasp_cb(self, req):
         rospy.logdebug("Received grasp request!")
         # From wherever we are close gripper
@@ -116,21 +128,13 @@ class GripperGraspService(object):
         while not rospy.is_shutdown() and \
                   (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
                   not on_optimal_close and self.last_state:
-            for index in range(len(self.last_state.error.positions)):
-                if self.last_state.error.positions[index] > self.max_position_error:
-                    rospy.logdebug("Over error joint {}...".format(index))
-                    closing_amount = self.get_optimal_close()
-                    on_optimal_close = True
+            if self.is_grasped == True:
+                closing_amount = self.last_state.actual.positions
+                on_optimal_close = True
             self.send_close(closing_amount)
             r.sleep()
 
         return EmptyResponse()
-
-    def get_optimal_close(self):
-        optimal_state = []
-        for pos in self.last_state.actual.positions:
-            optimal_state.append(pos - self.max_position_error)
-        return optimal_state
 
     def send_close(self, closing_amount):
         rospy.loginfo("Closing: " + str(closing_amount))
