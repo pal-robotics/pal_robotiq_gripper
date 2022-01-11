@@ -97,7 +97,7 @@ class GripperGrasp(object):
         self.pub_gth = rospy.Publisher("gripper_status_human", String, queue_size=1)
         # Publish a boolean to know if an object is grasped or not
         self.pub_js = rospy.Publisher("is_grasped", Bool , queue_size=1)
-        print(rospy.get_param("pal_robot_info/type"))
+        rospy.loginfo(rospy.get_param("pal_robot_info/type"))
         self.tiago_type = "tiago"
         self.robotiq_side = ""
         if rospy.get_param("pal_robot_info/type") == "tiago_dual":
