@@ -6,15 +6,15 @@
   <xacro:property name="joint_lower_limit" value="0.0" />
   <xacro:property name="joint_upper_limit" value="0.055" />
 
-  <xacro:macro name="epick_hand" params="hand_link_name robot_name parent">
+  <xacro:macro name="epick_hand" params="hand_link_name robot_name prefix parent">
     
-    <joint name="base_joint" type="fixed">
+    <joint name="${prefix}base_joint" type="fixed">
       <parent link="${parent}"/>
-      <child link="coupler_link"/>
+      <child link="${prefix}coupler_link"/>
       <origin xyz="0 0 0.0" rpy="${3.1416/2} 0 ${3.1416/2}"/>      
     </joint>
 
-    <link name="coupler_link">
+    <link name="${prefix}coupler_link">
       <visual>
           <origin xyz="0 0 0.0" rpy="3.1416 0 0" />
           <geometry>
@@ -39,13 +39,13 @@
       </inertial>
     </link>
 
-    <joint name="coupler_joint" type="fixed">
-      <parent link="coupler_link"/>
-      <child link="${hand_link_name}"/>
+    <joint name="${prefix}coupler_joint" type="fixed">
+      <parent link="${prefix}coupler_link"/>
+      <child link="${prefix}${hand_link_name}"/>
       <origin xyz="0 0 ${0.0273}" rpy="0 0 -${3.1416/2}"/>      
     </joint>
 
-    <link name="${hand_link_name}">
+    <link name="${prefix}${hand_link_name}">
       <inertial>
         <mass value="0.745" />
         <origin xyz="0 0.0 0.055" rpy="0 0 0" />
@@ -87,13 +87,13 @@
       </collision>  -->     
     </link>
 
-    <joint name="$hand__end_effector_joint" type="fixed">
-      <parent link="${hand_link_name}"/>
-      <child link="epick_end_effector"/>
+    <joint name="${prefix}${hand_link_name}_joint" type="fixed">
+      <parent link="${prefix}${hand_link_name}"/>
+      <child link="${prefix}epick_end_effector"/>
       <origin xyz="0 0 ${0.13}" rpy="0 0 0"/>      
     </joint>
 
-    <link name="epick_end_effector">
+    <link name="${prefix}epick_end_effector">
       <gravity>0</gravity>
       <visual>
         <origin rpy="0 0 0.005" xyz="0 0 0"/>
