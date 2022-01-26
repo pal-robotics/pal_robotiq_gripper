@@ -51,7 +51,7 @@ class GripperGrasp(object):
 
         self.timeout = self.ddr.add_variable("timeout",
                                              "timeout for the closing action",
-                                             1.5, 0.0, 30.0)
+                                             3.0, 0.0, 30.0)
         self.closing_time = self.ddr.add_variable("closing_time",
                                                   "Time for the closing goal",
                                                   0.2, 0.01, 30.0)
@@ -153,6 +153,7 @@ class GripperGrasp(object):
 
         self.cmd_pub.publish(jt)
         
+
     def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
         bin_number = bin(data.data)[2:].zfill(8)  # data range: 0 -> 255
