@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
  
-  <xacro:include filename="$(find pal_robotiq_epick_description)/urdf/robotiq_epick.gazebo.xacro"/>  
-
+  <xacro:include filename="$(find pal_robotiq_epick_description)/urdf/robotiq_epick_gripper.transmission.xacro" />
   <xacro:property name="joint_lower_limit" value="0.0" />
   <xacro:property name="joint_upper_limit" value="0.055" />
 
@@ -87,7 +86,7 @@
       </collision>  -->     
     </link>
 
-    <joint name="${prefix}vacuum_joint" type="fixed">
+    <joint name="${prefix}finger_joint" type="fixed">
       <parent link="${prefix}base_link"/>
       <child link="${prefix}end_effector"/>
       <origin xyz="0 0 ${0.13}" rpy="0 0 0"/>
@@ -110,8 +109,6 @@
         <inertia ixx="1e-08" ixy="0" ixz="0" iyy="1e-08" iyz="0" izz="1e-08"/>
       </inertial>
     </link>
-
-  <!-- <xacro:epick_hand_gazebo robot_name="${robot_name}" />  -->
+    <xacro:robotiq_epick_gripper_transmission prefix="${prefix}"/>
   </xacro:macro>
-
 </robot>
