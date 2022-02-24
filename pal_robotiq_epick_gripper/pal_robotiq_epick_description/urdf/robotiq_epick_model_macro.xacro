@@ -86,10 +86,12 @@
       </collision>  -->     
     </link>
 
-    <joint name="${prefix}finger_joint" type="fixed">
+    <joint name="${prefix}finger_joint" type="revolute">
       <parent link="${prefix}base_link"/>
       <child link="${prefix}end_effector"/>
       <origin xyz="0 0 ${0.13}" rpy="0 0 0"/>
+      <axis xyz="1 0 0" />
+      <limit lower="0" upper="1" velocity="2.0" effort="1000" />
     </joint>
 
     <link name="${prefix}end_effector">

@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 
 <robot name="robotiq_epick_gripper" xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:include filename="$(find pal_robotiq_epick_description)/urdf/robotiq_epcick_gripper.transmission.xacro" />
+    <xacro:include filename="$(find pal_robotiq_epick_description)/urdf/robotiq_epick_gripper.transmission.xacro" />
     <xacro:include filename="$(find pal_robotiq_epick_description)/urdf/robotiq_epick_model_macro.xacro" />
 
     <xacro:property name="pi" value="3.1415"/>
