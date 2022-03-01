@@ -216,6 +216,7 @@ class GripperGrasp(object):
             res = None
         return res
 
+
 if __name__ == '__main__':
     rospy.init_node('gripper_grasping')
     gg = GripperGrasp()
