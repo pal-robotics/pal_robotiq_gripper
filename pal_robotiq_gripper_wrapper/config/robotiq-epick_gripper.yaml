@@ -3,9 +3,9 @@ controller_name: gripper
 # Rate at which to publish the state of the controller
 pub_rate: 50
 # Real joints that will be commanded (with the same goal for each being parallel_gripper goal / 2.0)
-real_joint_names: ['gripper_finger_joint']
+real_joint_names: ['gripper_vacuum_joint']
 # Close configuration of the joints
 close_configuration: [0.8]
 # Joint name for the parallel_gripper joint
-gripper_joint_name: 'gripper_finger_joint'
+gripper_joint_name: 'gripper_vacuum_joint'
 gripper_motor_name: 'gripper_motor'
