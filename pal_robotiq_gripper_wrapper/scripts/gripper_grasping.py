@@ -51,13 +51,17 @@ class GripperGrasp(object):
 
         self.timeout = self.ddr.add_variable("timeout",
                                              "timeout for the closing action",
-                                             3.0, 0.0, 30.0)
+                                             2.0, 2.0, 5.0)
         self.closing_time = self.ddr.add_variable("closing_time",
                                                   "Time for the closing goal",
-                                                  0.2, 0.01, 30.0)
+                                                  0.2, 0.01, 5.0)
+        self.rate = self.ddr.add_variable("rate",
+                                          "Rate Hz at which the node closing will do stuff",
+                                          25, 10, 50)
+
         self.pressure_configuration = self.ddr.add_variable("pressure",
                                           "Aditional distance to apply more or less pressure",
-                                          0.05, 0.0, 0.2)
+                                          0.08, 0.05, 0.2)
 
         self.ddr.start(self.ddr_cb)
         rospy.loginfo("Initialized dynamic reconfigure on: " +
@@ -111,9 +115,15 @@ class GripperGrasp(object):
         self.is_grasped_msg = Bool()
 
     def ddr_cb(self, config, level):
-        self.timeout = config['timeout']
+        rospy.loginfo("timeout" + str(config['timeout']) + "closing_time" + str(config['closing_time']))
+        if config['timeout'] - 2 <= config['closing_time']:
+            self.timeout = config['closing_time'] + 2
+            config['timeout'] = config['closing_time'] + 2
+        else:
+            self.timeout = config['timeout']
         self.closing_time = config['closing_time']
         self.pressure_configuration = config['pressure']
+        self.rate = config['rate']
         return config
 
     def state_cb(self, data):
@@ -122,7 +132,7 @@ class GripperGrasp(object):
     def grasp_cb(self, req):
         rospy.logdebug("Received grasp request!")
         # From wherever we are close gripper
-
+        self.on_optimal_close = False
         # Keep closing until the error of the state reaches
         # max_position_error on any of the gripper joints
         # or we reach timeout
@@ -130,14 +140,14 @@ class GripperGrasp(object):
         closing_amount = self.close_configuration
         # Initial command, wait for it to do something
         self.send_close(closing_amount)
-        rospy.sleep(self.closing_time)
         while not rospy.is_shutdown() and \
                   (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
                   not self.on_optimal_close and self.last_state:
-            if self.is_grasped_msg.data == True:
+            if self.is_grasped_msg.data is True:
                 closing_amount = [self.last_state.actual.positions[0]+self.pressure_configuration]
                 self.on_optimal_close = True
                 self.send_close(closing_amount)
+            r = rospy.Rate(self.rate)
 
         return EmptyResponse()
 
@@ -145,10 +155,15 @@ class GripperGrasp(object):
         rospy.loginfo("Closing: " + str(closing_amount))
         jt = JointTrajectory()
         jt.joint_names = self.real_joint_names
-        #jt.header.stamp = rospy.Time.now()
+        jt.header.stamp = rospy.Time.now()
         p = JointTrajectoryPoint()
         p.positions = closing_amount
-        p.time_from_start = rospy.Duration(self.closing_time)
+        if self.on_optimal_close == True:
+            # Duration after grasping
+            p.time_from_start = rospy.Duration(0.2)
+        else:
+            # Duration of the grasping
+            p.time_from_start = rospy.Duration(self.closing_time)
         jt.points.append(p)
 
         self.cmd_pub.publish(jt)
@@ -162,13 +177,13 @@ class GripperGrasp(object):
         gGTO = hex(int(bin_number[4],2))
         gACT = hex(int(bin_number[7],2))
         if(str(gOBJ) == "0x1" or str(gOBJ) == "0x2"):
-            self.is_grasped_msg.data = True;
+            self.is_grasped_msg.data = True
         else:
-            if(str(gOBJ) == "0x0" and self.on_optimal_close==True):
-                self.is_grasped_msg.data = True;
+            if(str(gOBJ) == "0x0" and self.on_optimal_close is True):
+                self.is_grasped_msg.data = True
             else:
-                self.is_grasped_msg.data = False;
-                self.on_optimal_close = False;
+                self.is_grasped_msg.data = False
+                self.on_optimal_close = False
         self.pub_js.publish(self.is_grasped_msg)
 
         rospy.loginfo("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
@@ -194,10 +209,10 @@ class GripperGrasp(object):
             res = gACT_dict[gACT] + " " + gGTO_dict[gGTO] + " " + gSTA_dict[gSTA] + " " + gOBJ_dict[gOBJ]
         except Exception:
             rospy.logerr("Not able to decode hex codes in gOBJ, gSTA, gGTO, gACT")
-            rospy.logerr("gOBJ hex: "+str(gOBJ))
-            rospy.logerr("gSTA hex: "+str(gSTA))
-            rospy.logerr("gGTO hex: "+str(gGTO))
-            rospy.logerr("gACT hex: "+str(gACT))
+            rospy.logerr("gOBJ hex: " + str(gOBJ))
+            rospy.logerr("gSTA hex: " + str(gSTA))
+            rospy.logerr("gGTO hex: " + str(gGTO))
+            rospy.logerr("gACT hex: " + str(gACT))
             res = None
         return res
 
