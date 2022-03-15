@@ -14,11 +14,11 @@ from std_msgs.msg import String, UInt8
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from std_srvs.srv import Empty, EmptyResponse
 from sensor_msgs.msg import JointState
-from pal_robotiq_gripper_wrapper_msgs.msg import GripperStatus
+from std_msgs.msg import Bool
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 
 
-class GripperGraspService(object):
+class GripperGrasp(object):
     def __init__(self):
         rospy.loginfo("Initializing Gripper Grasper...")
 
@@ -48,19 +48,20 @@ class GripperGraspService(object):
         # This node Dynamic params
         self.ddr = DDynamicReconfigure(
             self.controller_name + "_grasp_service")
-        self.max_position_error = self.ddr.add_variable("max_position_error",
-                                                        "Max absolute value of controller "
-                                                        "state of any joint to stop closing",
-                                                        0.002, 0.00001, 0.045)
+
         self.timeout = self.ddr.add_variable("timeout",
                                              "timeout for the closing action",
-                                             5.0, 0.0, 30.0)
+                                             2.0, 2.0, 5.0)
         self.closing_time = self.ddr.add_variable("closing_time",
                                                   "Time for the closing goal",
-                                                  2.0, 0.01, 30.0)
+                                                  0.2, 0.01, 5.0)
         self.rate = self.ddr.add_variable("rate",
                                           "Rate Hz at which the node closing will do stuff",
-                                          5, 1, 50)
+                                          25, 10, 50)
+
+        self.pressure_configuration = self.ddr.add_variable("pressure",
+                                          "Aditional distance to apply more or less pressure",
+                                          0.08, 0.05, 0.2)
 
         self.ddr.start(self.ddr_cb)
         rospy.loginfo("Initialized dynamic reconfigure on: " +
@@ -88,11 +89,40 @@ class GripperGraspService(object):
         rospy.loginfo("Offering grasp service on: " +
                       str(self.grasp_srv.resolved_name))
         rospy.loginfo("Done initializing Gripper Grasp Service!")
+        self.on_optimal_close = False
+
+        # Init Grasp Status
+        # TODO: Enable current functionality if tiago dual and both ee are robotiq-2f
+        # Publish a human readable status of the gripper
+        self.gripper_motor_name = rospy.get_param("~gripper_motor_name", None)
+        self.sub_gs = rospy.Subscriber("{}/gripper_status".format(self.gripper_motor_name),
+                         UInt8, self.grip_status_cb, queue_size=1)
+        self.pub_gth = rospy.Publisher("{}/gripper_status_human".format(self.gripper_motor_name), String, queue_size=1)
+        # Publish a boolean to know if an object is grasped or not
+        self.pub_js = rospy.Publisher("{}/is_grasped".format(self.gripper_motor_name), Bool , queue_size=1)
+        rospy.loginfo(rospy.get_param("pal_robot_info/type"))
+        self.tiago_type = "tiago"
+        self.robotiq_side = ""
+        if rospy.get_param("pal_robot_info/type") == "tiago_dual":
+            self.tiago_type = "tiago_dual"
+            for side in ("right","left"):
+                if "robotiq-2f" in rospy.get_param("pal_robot_info/end_effector_"+side):
+                    self.ee = rospy.get_param("pal_robot_info/end_effector_"+side)
+                    self.robotiq_side = "_"+side
+        else:
+            self.ee = rospy.get_param("pal_robot_info/end_effector")
+
+        self.is_grasped_msg = Bool()
 
     def ddr_cb(self, config, level):
-        self.max_position_error = config['max_position_error']
-        self.timeout = config['timeout']
+        rospy.loginfo("timeout" + str(config['timeout']) + "closing_time" + str(config['closing_time']))
+        if config['timeout'] - 2 <= config['closing_time']:
+            self.timeout = config['closing_time'] + 2
+            config['timeout'] = config['closing_time'] + 2
+        else:
+            self.timeout = config['timeout']
         self.closing_time = config['closing_time']
+        self.pressure_configuration = config['pressure']
         self.rate = config['rate']
         return config
 
@@ -102,7 +132,7 @@ class GripperGraspService(object):
     def grasp_cb(self, req):
         rospy.logdebug("Received grasp request!")
         # From wherever we are close gripper
-
+        self.on_optimal_close = False
         # Keep closing until the error of the state reaches
         # max_position_error on any of the gripper joints
         # or we reach timeout
@@ -110,53 +140,34 @@ class GripperGraspService(object):
         closing_amount = self.close_configuration
         # Initial command, wait for it to do something
         self.send_close(closing_amount)
-        rospy.sleep(self.closing_time)
-        r = rospy.Rate(self.rate)
-        on_optimal_close = False
         while not rospy.is_shutdown() and \
                   (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
-                  not on_optimal_close and self.last_state:
-            for index in range(len(self.last_state.error.positions)):
-                if self.last_state.error.positions[index] > self.max_position_error:
-                    rospy.logdebug("Over error joint {}...".format(index))
-                    closing_amount = self.get_optimal_close()
-                    on_optimal_close = True
-            self.send_close(closing_amount)
-            r.sleep()
+                  not self.on_optimal_close and self.last_state:
+            if self.is_grasped_msg.data is True:
+                closing_amount = [self.last_state.actual.positions[0]+self.pressure_configuration]
+                self.on_optimal_close = True
+                self.send_close(closing_amount)
+            r = rospy.Rate(self.rate)
 
         return EmptyResponse()
-
-    def get_optimal_close(self):
-        optimal_state = []
-        for pos in self.last_state.actual.positions:
-            optimal_state.append(pos - self.max_position_error)
-        return optimal_state
 
     def send_close(self, closing_amount):
         rospy.loginfo("Closing: " + str(closing_amount))
         jt = JointTrajectory()
         jt.joint_names = self.real_joint_names
+        jt.header.stamp = rospy.Time.now()
         p = JointTrajectoryPoint()
         p.positions = closing_amount
-        p.time_from_start = rospy.Duration(self.closing_time)
+        if self.on_optimal_close == True:
+            # Duration after grasping
+            p.time_from_start = rospy.Duration(0.2)
+        else:
+            # Duration of the grasping
+            p.time_from_start = rospy.Duration(self.closing_time)
         jt.points.append(p)
 
         self.cmd_pub.publish(jt)
-
-
-class GripperGraspStatus(object):
-    def __init__(self):
-        rospy.loginfo("Initializing Gripper Grasper Status ...")
-        # Publish a human readable status of the gripper
-        self.gripper_motor_name = rospy.get_param("~gripper_motor_name", None)
-        self.sub_gs = rospy.Subscriber("{}/gripper_status".format(self.gripper_motor_name),
-                         UInt8, self.grip_status_cb, queue_size=1)
-        self.pub_gth = rospy.Publisher("{}/gripper_status_human".format(self.gripper_motor_name), String, queue_size=1)
-        # Publish gripper state (position and current) and translates position to real distance between fingers (robotiq gripper 85)
-        self.sub_js = rospy.Subscriber("joint_states", JointState, self.joint_state_cb, queue_size=1)
-        self.ee = rospy.get_param("~model")
-        self.gripper_joint_name = rospy.get_param("~gripper_joint_name")
-        self.pub_js = rospy.Publisher("{}/state".format(self.gripper_joint_name.replace('_finger', '')), GripperStatus, queue_size=1)
+        
 
     def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
@@ -165,9 +176,20 @@ class GripperGraspStatus(object):
         gSTA = hex(int(bin_number[2:4],2))
         gGTO = hex(int(bin_number[4],2))
         gACT = hex(int(bin_number[7],2))
+        if(str(gOBJ) == "0x1" or str(gOBJ) == "0x2"):
+            self.is_grasped_msg.data = True
+        else:
+            if(str(gOBJ) == "0x0" and self.on_optimal_close is True):
+                self.is_grasped_msg.data = True
+            else:
+                self.is_grasped_msg.data = False
+                self.on_optimal_close = False
+        self.pub_js.publish(self.is_grasped_msg)
 
         rospy.loginfo("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
         self.pub_gth.publish("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
+
+
 
     def hex_to_human(self, gOBJ, gSTA, gGTO, gACT):
         gOBJ_dict = {"0x0": "Fingers are in motion towards requested position. No object detected",
@@ -187,36 +209,14 @@ class GripperGraspStatus(object):
             res = gACT_dict[gACT] + " " + gGTO_dict[gGTO] + " " + gSTA_dict[gSTA] + " " + gOBJ_dict[gOBJ]
         except Exception:
             rospy.logerr("Not able to decode hex codes in gOBJ, gSTA, gGTO, gACT")
-            rospy.logerr("gOBJ hex: "+str(gOBJ))
-            rospy.logerr("gSTA hex: "+str(gSTA))
-            rospy.logerr("gGTO hex: "+str(gGTO))
-            rospy.logerr("gACT hex: "+str(gACT))
+            rospy.logerr("gOBJ hex: " + str(gOBJ))
+            rospy.logerr("gSTA hex: " + str(gSTA))
+            rospy.logerr("gGTO hex: " + str(gGTO))
+            rospy.logerr("gACT hex: " + str(gACT))
             res = None
         return res
 
-    def joint_state_cb(self, data):
-        gfj_index = data.name.index(self.gripper_joint_name)
-        gripper_status_msg = GripperStatus()
-        gripper_status_msg.header = data.header
-        gripper_status_msg.name = data.name[gfj_index]
-        gripper_status_msg.position = data.position[gfj_index]
-        gripper_status_msg.fingers_distance = self.gripper_pos_to_dist(data.position[0])
-        gripper_status_msg.effort = data.effort[gfj_index]
-        self.pub_js.publish(gripper_status_msg)
-
-    def gripper_pos_to_dist(self, pos):
-        
-        if self.ee == "robotiq-2f-85":
-            # Empiric formula https://docs.google.com/spreadsheets/d/1UbA8CLmDVlxi3S_ETz7UTv8AqJj86mhsNu1IXPgQgMk/edit#gid=0
-            res = (-113*pos + 87)/100 # cm to m
-        else:
-            res = pos
-        return res
-    
-
-
 if __name__ == '__main__':
     rospy.init_node('gripper_grasping')
-    gg = GripperGraspService()
-    gg_stat = GripperGraspStatus()
+    gg = GripperGrasp()
     rospy.spin()
