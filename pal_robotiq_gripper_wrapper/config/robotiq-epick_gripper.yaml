@@ -8,4 +8,4 @@ real_joint_names: ['gripper_vacuum_joint']
 close_configuration: [0.8]
 # Joint name for the parallel_gripper joint
 gripper_joint_name: 'gripper_vacuum_joint'
-gripper_motor_name: 'gripper_motor'
+gripper_motor_name: 'gripper_vacuum'
