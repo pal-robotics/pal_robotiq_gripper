@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_epick_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.8 (2022-03-18)
+------------------
 * fix the versioning
 * Merge branch 'add_robotiq_epick_gripper' into 'master'
   Add robotiq_epick_gripper urdf

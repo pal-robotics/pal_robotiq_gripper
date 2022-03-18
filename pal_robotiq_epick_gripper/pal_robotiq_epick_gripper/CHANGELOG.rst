@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_epick_gripper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.8 (2022-03-18)
+------------------
 * Merge branch 'add_robotiq_epick_gripper' into 'master'
   Add robotiq_epick_gripper urdf
   See merge request robots/pal_robotiq_gripper!5
