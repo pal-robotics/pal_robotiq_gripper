@@ -2,6 +2,37 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'add_robotiq_epick_gripper' into 'master'
+  Add robotiq_epick_gripper urdf
+  See merge request robots/pal_robotiq_gripper!5
+* Add epick grasping service and is_grasped topic
+* Change config files name
+* Change joint name and configuration
+* Add config files and take in consideration the epick gripper in the grasping
+* Merge branch 'object-detection' into 'master'
+  Object detection
+  See merge request robots/pal_robotiq_gripper!3
+* Fix grasping + add intelligence in the dynamic parameter + fix format
+* Update default parameters
+* Adding pressure dynamic param and removing unused param + improvements
+  Removing max_position_error and rate dynamic param
+  Change the default param of the timeout and closin with optimized one
+  Add dynamic_reconfigure as a new dynamic_parameter
+  Improve when the gripper detects a close to stay to True when moving
+  to the optimised position
+  Add is_grasped topic for Tiago dual on <gripper>_motor/is_grasped
+* Change print to rospy.loginfo
+* Fusion the two classes
+* Update grasping service
+* Remove bool to avoid confusion
+* Fix bool and Bool
+* Create topic is grasped
+* feat: enable for tiago dual
+* fix: report real value and not one hardcoded
+* Contributors: daniellopez, saikishor, thomaspeyrucain
+
 0.0.7 (2021-11-18)
 ------------------
 * Merge branch 'robotiq_fixes' into 'master'

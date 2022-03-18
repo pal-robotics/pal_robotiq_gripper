@@ -2,6 +2,14 @@
 Changelog for package pal_robotiq_controller_configuration_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'add_robotiq_epick_gripper' into 'master'
+  Add robotiq_epick_gripper urdf
+  See merge request robots/pal_robotiq_gripper!5
+* Add epick grasping service and is_grasped topic
+* Contributors: saikishor, thomaspeyrucain
+
 0.0.7 (2021-11-18)
 ------------------
 * Merge branch 'robotiq_fixes' into 'master'
