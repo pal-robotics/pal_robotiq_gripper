@@ -137,6 +137,7 @@ class GripperGrasp(object):
         # max_position_error on any of the gripper joints
         # or we reach timeout
         initial_time = rospy.Time.now()
+        r = rospy.Rate(self.rate)
         closing_amount = self.close_configuration
         # Initial command, wait for it to do something
         self.send_close(closing_amount)
@@ -147,7 +148,7 @@ class GripperGrasp(object):
                 closing_amount = [self.last_state.actual.positions[0]+self.pressure_configuration]
                 self.on_optimal_close = True
                 self.send_close(closing_amount)
-            r = rospy.Rate(self.rate)
+            r.sleep()
 
         return EmptyResponse()
 
@@ -215,6 +216,7 @@ class GripperGrasp(object):
             rospy.logerr("gACT hex: " + str(gACT))
             res = None
         return res
+
 
 if __name__ == '__main__':
     rospy.init_node('gripper_grasping')

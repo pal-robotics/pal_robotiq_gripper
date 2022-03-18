@@ -1,0 +1,11 @@
+# The name of the controller, everything will be subnamed like gripper_right_controller/command
+controller_name: gripper_right
+# Rate at which to publish the state of the controller
+pub_rate: 50
+# Real joints that will be commanded (with the same goal for each being parallel_gripper goal / 2.0)
+real_joint_names: ['gripper_right_vacuum_joint']
+# Close configuration of the joints
+close_configuration: [0.8]
+# Joint name for the parallel_gripper joint
+gripper_joint_name: 'gripper_right_vacuum_joint'
+gripper_motor_name: 'gripper_right_vacuum'

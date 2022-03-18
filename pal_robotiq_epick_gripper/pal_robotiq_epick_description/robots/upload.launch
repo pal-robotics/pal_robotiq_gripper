@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- Robot description -->
+  <param name="robot_description"
+      command="rosrun xacro xacro --inorder
+               '$(find pal_robotiq_epick_description)/robots/pal_robotiq_epick_gripper.urdf.xacro'" />
+
+</launch>

@@ -3,12 +3,17 @@
     <arg name="side" default=""/>
     <arg name="suffix" value="$(eval ('' if side == '' else '_' + side))"/>
     <arg name="model"/> <!-- Current models are robotiq-2f-85 and robotiq-2f-140 -->
-    <node pkg="pal_robotiq_gripper_wrapper" name="gripper$(arg suffix)_grasping" type="gripper_grasping.py" output="screen">
+    <node pkg="pal_robotiq_gripper_wrapper" name="gripper$(arg suffix)_grasping" type="gripper_grasping.py" output="screen" if="$(eval arg('model') != 'robotiq-epick')">
         <rosparam command="load" file="$(find pal_robotiq_gripper_wrapper)/config/$(arg model)_gripper$(arg suffix).yaml" />
         <!-- Dynamic reconfigure parameters -->
         <param name="grasper/timeout" type="double" value="2.0"/>
         <param name="grasper/closing_time" type="double" value="1.0"/>
         <param name="grasper/pressure_configuration" type="double" value="0.08"/>
+        <param name="model" type="string" value="$(arg model)"/>
+    </node>
+    <node pkg="pal_robotiq_gripper_wrapper" name="gripper$(arg suffix)_grasping" type="gripper_epick_grasping.py" output="screen" if="$(eval arg('model') == 'robotiq-epick')">
+        <rosparam command="load" file="$(find pal_robotiq_gripper_wrapper)/config/$(arg model)_gripper$(arg suffix).yaml" />
+        <param name="grasper/pressure_configuration" type="double" value="1.0"/>
         <param name="model" type="string" value="$(arg model)"/>
     </node>
 </launch>
