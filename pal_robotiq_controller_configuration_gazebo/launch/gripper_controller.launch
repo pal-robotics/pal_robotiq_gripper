@@ -7,7 +7,7 @@
         pkg="controller_manager" type="spawner" output="screen"
         args="--timeout 120
               gripper$(arg suffix)_controller" />
-  <node name="home_gripper$(arg suffix)" pkg="pal_robotiq_controller_configuration" type="home_gripper.py" output="screen">
+  <node name="home_gripper$(arg suffix)" pkg="pal_robotiq_controller_configuration" type="home_gripper.py" output="screen" if="$(eval arg('model') != 'robotiq-epick')">
     <param name="suffix" value="$(arg suffix)"/>
   </node>
   <rosparam command="load" file="$(find pal_robotiq_controller_configuration_gazebo)/config/pids$(arg suffix).yaml" ns="/gains" />
