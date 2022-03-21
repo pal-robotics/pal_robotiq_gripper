@@ -89,9 +89,10 @@
     <joint name="${prefix}vacuum_joint" type="prismatic">
       <parent link="${prefix}base_link"/>
       <child link="${prefix}end_effector"/>
-      <origin xyz="0 0 ${0.13}" rpy="0 0 0"/>
-      <axis xyz="1 0 0" />
-      <limit lower="0" upper="0.01" velocity="2.0" effort="1000" />
+      <origin xyz="0 0 0.13" rpy="0 0 0"/>
+      <axis xyz="0 0 1" />
+      <limit lower="-0.01" upper="0.0" velocity="2.0" effort="1000"/>
+      <dynamics damping="0.1" friction="0.01"/>
     </joint>
 
     <link name="${prefix}end_effector">
@@ -101,9 +102,9 @@
         <geometry>
           <cylinder radius="0.0225" length="0.01"/>          
         </geometry>
-        <!-- <material name="transparent">
-          <color rgba="0 0 0 0"/>
-        </material> -->
+        <material name="transparent">
+          <color rgba="0.5 0.5 0.5 0.7"/>
+        </material>
       </visual>
       <inertial>
         <origin rpy="0 0 0" xyz="0 0 0"/>
