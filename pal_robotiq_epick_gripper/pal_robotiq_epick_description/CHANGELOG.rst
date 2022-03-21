@@ -2,6 +2,14 @@
 Changelog for package pal_robotiq_epick_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'fix_robotiq_epick_gripper' into 'master'
+  Fix urdf for gazebo + change color ef the end effector
+  See merge request robots/pal_robotiq_gripper!6
+* Fix urdf for gazebo + change color ef the end effector
+* Contributors: saikishor, thomaspeyrucain
+
 0.0.8 (2022-03-18)
 ------------------
 * fix the versioning

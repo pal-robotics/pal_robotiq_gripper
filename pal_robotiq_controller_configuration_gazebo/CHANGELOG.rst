@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_controller_configuration_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.8 (2022-03-18)
 ------------------
 * Merge branch 'add_robotiq_epick_gripper' into 'master'
