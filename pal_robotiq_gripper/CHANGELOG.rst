@@ -2,6 +2,14 @@
 Changelog for package pal_robotiq_gripper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'add_dependency' into 'master'
+  Add pal_robotiq_controller_configuration dependency
+  See merge request robots/pal_robotiq_gripper!7
+* Add pal_robotiq_controller_configuration dependency
+* Contributors: saikishor, thomaspeyrucain
+
 0.0.9 (2022-03-21)
 ------------------
 
