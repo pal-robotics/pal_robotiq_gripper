@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_epick_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.10 (2022-03-23)
 -------------------
 

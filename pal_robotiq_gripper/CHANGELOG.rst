@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_gripper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.10 (2022-03-23)
 -------------------
 * Merge branch 'add_dependency' into 'master'

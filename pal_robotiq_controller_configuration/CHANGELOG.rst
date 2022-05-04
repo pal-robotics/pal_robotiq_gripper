@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_controller_configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.10 (2022-03-23)
 -------------------
 

@@ -2,6 +2,14 @@
 Changelog for package pal_robotiq_controller_configuration_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'almi' into 'master'
+  Update the version of the mimicjoint + update the grippers for grasping
+  See merge request robots/pal_robotiq_gripper!8
+* Update the version of the mimicjoint + update the center of mass and inertia of the robotiq 85 gripper + adapt the force and collision in gazebo to grasp objects
+* Contributors: saikishor, thomaspeyrucain
+
 0.0.10 (2022-03-23)
 -------------------
 
