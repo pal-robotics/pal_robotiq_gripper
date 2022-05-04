@@ -202,7 +202,7 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}${fingerprefix}_inner_knuckle" />
       <axis xyz="1 0 0" />
-      <limit lower="-0.8757" upper="0.8757" velocity="0.5" effort="0.05" />
+      <limit lower="-0.8757" upper="0.8757" velocity="2" effort="0.05" />
       <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
     </joint>
     <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}${fingerprefix}mimic_robotiq_85_1" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}${fingerprefix}_inner_knuckle_joint" has_pid="false" multiplier="-1.0" offset="0.0"/>
@@ -214,7 +214,7 @@
       <parent link="${prefix}${fingerprefix}_outer_finger" />
       <child link="${prefix}${fingerprefix}_inner_finger" />
       <axis xyz="1 0 0" />
-      <limit lower="-0.8757" upper="0.8757" velocity="0.5" effort="0.05" />
+      <limit lower="-0.8757" upper="0.8757" velocity="2" effort="0.05" />
       <mimic joint="${prefix}finger_joint" multiplier="1" offset="0" />
     </joint>
     <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}${fingerprefix}mimic_robotiq_85_1" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}${fingerprefix}_inner_finger_joint" has_pid="false" multiplier="1.0" offset="0.0"/>
@@ -324,8 +324,8 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}left_outer_knuckle" />
       <axis xyz="-1 0 0" />
-      <limit lower="0" upper="0.7" velocity="0.5" effort="0.05" />
-      <dynamics damping="0.2"/>
+      <limit lower="0" upper="0.7" velocity="2" effort="0.05" />
+      <dynamics damping="0.03"/>
     </joint>
     <gazebo reference="${prefix}finger_joint">
       <implicitSpringDamper>1</implicitSpringDamper>
@@ -340,7 +340,7 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}right_outer_knuckle" />
       <axis xyz="1 0 0" />
-      <limit lower="-0.725" upper="0.725" velocity="0.5" effort="0.05" />
+      <limit lower="-0.725" upper="0.725" velocity="2" effort="0.05" />
     <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
     </joint>
     <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}mimic_robotiq_85_5" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}right_outer_knuckle_joint" has_pid="false" multiplier="-1.0" offset="0.0"/>
