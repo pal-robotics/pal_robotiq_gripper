@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_85_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.11 (2022-05-04)
+-------------------
 * Merge branch 'almi' into 'master'
   Update the version of the mimicjoint + update the grippers for grasping
   See merge request robots/pal_robotiq_gripper!8
