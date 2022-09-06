@@ -297,6 +297,24 @@
     </gazebo>
   </xacro:macro>
 
+    <!-- Grasping frame -->
+  <xacro:macro name="pal_robotiq_grasping_frame" params="prefix">
+    <joint name="${prefix}grasping_frame_joint" type="fixed">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}grasping_frame" />
+      <origin xyz="0 0 0.12" rpy="0 -1.5708 0" />
+    </joint>
+    <link name="${prefix}grasping_frame">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.0001" />
+        <inertia ixx="0.00001" ixy="0.0" ixz="0.0"
+                 iyy="0.00001" iyz="0.0"
+                 izz="0.00001" />
+      </inertial>
+    </link>
+  </xacro:macro>
+
   <xacro:macro name="pal_robotiq_coupling_joint" params="prefix parent *origin">
     <joint name="${prefix}coupler_joint" type="fixed">
       <parent link="${parent}"/>
@@ -360,6 +378,7 @@
   <!-- Initialization of all joints and links -->
   <xacro:macro name="robotiq_85_gripper" params="prefix parent *origin">
     <xacro:robotiq_base_link prefix="${prefix}"/>
+    <xacro:pal_robotiq_grasping_frame prefix="${prefix}"/>
     <xacro:pal_robotiq_coupling_link prefix="${prefix}"/>
     <xacro:finger_links prefix="${prefix}" fingerprefix="left" reflect="1"/>
     <xacro:finger_links prefix="${prefix}" fingerprefix="right" reflect="-1"/>
