@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_controller_configuration_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.11 (2022-05-04)
 -------------------
 * Merge branch 'almi' into 'master'

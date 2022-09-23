@@ -2,6 +2,14 @@
 Changelog for package pal_robotiq_140_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'add-grasping-frame' into 'master'
+  Add grasping frame
+  See merge request robots/pal_robotiq_gripper!9
+* Add grasping frame
+* Contributors: David ter Kuile, Jordan Palacios
+
 0.0.11 (2022-05-04)
 -------------------
 * Merge branch 'almi' into 'master'
