@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_140_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.12 (2022-09-23)
+-------------------
 * Merge branch 'add-grasping-frame' into 'master'
   Add grasping frame
   See merge request robots/pal_robotiq_gripper!9
