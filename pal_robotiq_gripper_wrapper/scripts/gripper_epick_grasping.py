@@ -113,7 +113,6 @@ class GripperGrasp(object):
             self.is_grasped_msg.data = False
         self.pub_js.publish(self.is_grasped_msg)
 
-        rospy.loginfo("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
         self.pub_gth.publish("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
 
 
