@@ -73,21 +73,21 @@ class GripperGrasp(object):
 
     def grasp_cb(self, req):
         rospy.logdebug("Received grasp request!")
-        # From wherever we are close gripper
+        # Desactivate the vacuum gripper
         self.on_optimal_close = False
         self.send_command(0.0)
-        # Keep closing until the error of the state reaches
-        # max_position_error on any of the gripper joints
-        # or we reach timeout
         initial_time = rospy.Time.now()
         r = rospy.Rate(self.rate)
         pressure_amount = self.pressure_configuration
-        # Initial command, wait for it to do something
+        # Activate the vacuum gripper
         self.send_command(pressure_amount)
         while not rospy.is_shutdown() and (rospy.Time.now() - initial_time) < rospy.Duration(3.0):
             if self.is_grasped_msg.data is True:
                 self.on_optimal_close = True
             r.sleep()
+        # Desactivate the vacuum gripper if nothing is grasped after Timeout
+        if self.on_optimal_close == False:
+            self.send_command(0.0)
         return EmptyResponse()
 
     def send_command(self, pressure_amount):
