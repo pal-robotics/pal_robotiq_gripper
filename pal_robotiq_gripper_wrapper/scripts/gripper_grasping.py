@@ -187,7 +187,6 @@ class GripperGrasp(object):
                 self.on_optimal_close = False
         self.pub_js.publish(self.is_grasped_msg)
 
-        rospy.loginfo("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
         self.pub_gth.publish("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
 
 
@@ -199,7 +198,9 @@ class GripperGrasp(object):
                      "0x3": "Fingers are at requested position. No object detected or object has been loss / dropped"}
 
         gSTA_dict = {"0x0": "Gripper is in reset ( or automatic release ) state. See Fault Status if gripper is activated",
-                     "0x1": "Activation in progress", "0x2": "Not used", "0x3": "Activation is completed"}
+                     "0x1": "Activation in progress",
+                     "0x2": "Not used",
+                     "0x3": "Activation is completed"}
 
         gGTO_dict = {"0x0": "Stopped (or performing activation / automatic release)",
                      "0x1": "Go to Position Request"}
