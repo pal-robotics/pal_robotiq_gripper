@@ -2,6 +2,15 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'fix_grasping' into 'master'
+  Fix grasping
+  See merge request robots/pal_robotiq_gripper!10
+* Remove unnecessary loginfo + fix syntax
+* Fix grasping if no object is detected
+* Contributors: saikishor, thomaspeyrucain
+
 0.0.12 (2022-09-23)
 -------------------
 
