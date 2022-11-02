@@ -130,18 +130,18 @@ class GripperGrasp(object):
         return config
 
     def joint_cb(self, data):
-        self.last_joint_state = data
+        self.pub_js.publish(self.is_grasped_msg)
+
+    def state_cb(self, data):
+        self.last_state = data
         if self.on_optimal_close is True:
             self.is_grasped_msg.data = True
-            if data.effort[7] <= 0.01:
+            if self.last_state.error.positions[0] <= 0.01:
                 self.is_grasped_msg.data = False
                 self.on_optimal_close = False
         else:
             self.is_grasped_msg.data = False
         self.pub_js.publish(self.is_grasped_msg)
-
-    def state_cb(self, data):
-        self.last_state = data
 
     def grasp_cb(self, req):
         rospy.logdebug("Received grasp request!")
