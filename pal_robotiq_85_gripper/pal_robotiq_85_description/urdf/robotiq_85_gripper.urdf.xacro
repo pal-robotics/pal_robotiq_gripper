@@ -146,25 +146,25 @@
         <surface>
           <friction>
             <torsional>
-              <coefficient>10.0</coefficient>
+              <coefficient>1000.0</coefficient>
               <use_patch_radius>true</use_patch_radius>
-              <patch_radius>0.05</patch_radius>
+              <patch_radius>0.1</patch_radius>
             </torsional>
           </friction>
           <contact>
-            <poissons_ratio>0.5</poissons_ratio>
-            <elastic_modulus>1e8</elastic_modulus>
+            <poissons_ratio>1.0</poissons_ratio>
+            <elastic_modulus>Inf</elastic_modulus>
           </contact>
         </surface>
       </collision>
       <mu1>Inf</mu1>
       <mu2>Inf</mu2>
       <maxVel>0.0</maxVel>
-      <kp>1000000.0</kp>
+      <kp>Inf</kp>
       <kd>100.0</kd>
       <fdir1>1 0 0</fdir1>
       <maxVel>0.0</maxVel>
-      <minDepth>0.01</minDepth>
+      <minDepth>0.02</minDepth>
       <maxContacts>100</maxContacts>
       <material>Gazebo/DarkGrey</material>
     </gazebo>
@@ -397,4 +397,17 @@
     <xacro:right_outer_knuckle_joint prefix="${prefix}"/>
     <xacro:robotiq_85_gripper_transmission prefix="${prefix}"/>
   </xacro:macro>
+  <gazebo>
+    <gripper name="${name}_grasp_hack">
+      <grasp_check>
+        <attach_steps>1</attach_steps>
+        <detach_steps>1</detach_steps>
+        <min_contact_count>2</min_contact_count>
+      </grasp_check>
+      <gripper_link>gripper_right_inner_finger</gripper_link>
+      <gripper_link>gripper_left_inner_finger</gripper_link>
+      <palm_link>arm_7_link</palm_link>
+    </gripper>
+  </gazebo>
+
 </robot>
