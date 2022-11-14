@@ -30,6 +30,7 @@ include_directories(
 install(PROGRAMS
   scripts/gripper_grasping.py
   scripts/gripper_epick_grasping.py
+  scripts/gripper_grasping_simulation.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
