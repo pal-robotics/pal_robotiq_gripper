@@ -168,7 +168,6 @@ class GripperGrasp(object):
         jt.points.append(p)
 
         self.cmd_pub.publish(jt)
-        
 
     def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
