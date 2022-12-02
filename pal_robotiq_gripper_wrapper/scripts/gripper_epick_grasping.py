@@ -38,7 +38,7 @@ class GripperGrasp(object):
         self.pub_gth = rospy.Publisher("{}/gripper_status_human".format(self.gripper_motor_name), String, queue_size=1)
 
         # Publish a boolean to know if an object is grasped or not
-        self.pub_js = rospy.Publisher("{}/is_grasped".format(self.gripper_motor_name), Bool , queue_size=1)
+        self.pub_js = rospy.Publisher("{}/is_grasped".format(self.controller_name), Bool , queue_size=1)
 
         # This node Dynamic params
         self.ddr = DDynamicReconfigure(
