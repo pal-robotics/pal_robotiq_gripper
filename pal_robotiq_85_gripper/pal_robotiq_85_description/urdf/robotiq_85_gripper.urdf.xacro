@@ -27,9 +27,9 @@
     <gazebo>
       <gripper name="${name}_grasp_hack">
         <grasp_check>
-          <attach_steps>1</attach_steps>
-          <detach_steps>1</detach_steps>
-          <min_contact_count>2</min_contact_count>
+          <attach_steps>3</attach_steps>    <!-- should not be set to 1 because can cause segfault-->
+          <detach_steps>1</detach_steps>    <!-- should not change otherwise the object will be attached to the gripper too much time -->
+          <min_contact_count>3</min_contact_count>
         </grasp_check>
         <gripper_link>${name_prefix_left}</gripper_link>
         <gripper_link>${name_prefix_right}</gripper_link>
@@ -412,7 +412,7 @@
     <xacro:finger_joint prefix="${prefix}"/>
     <xacro:right_outer_knuckle_joint prefix="${prefix}"/>
     <xacro:robotiq_85_gripper_transmission prefix="${prefix}"/>
-    <!-- <xacro:grasp_hack name="${prefix}grasp_hack" name_prefix_left="${prefix}left_inner_finger" name_prefix_right="${prefix}right_inner_finger" parent_joint="${parent}"/> -->
+    <xacro:grasp_hack name="${prefix}grasp_hack" name_prefix_left="${prefix}left_inner_finger" name_prefix_right="${prefix}right_inner_finger" parent_joint="${parent}"/>
   </xacro:macro>
 
 </robot>
