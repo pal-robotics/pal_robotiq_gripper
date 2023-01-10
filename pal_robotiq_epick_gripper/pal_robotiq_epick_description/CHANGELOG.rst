@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_epick_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.14 (2023-01-10)
+-------------------
 * Merge branch 'epick_grasping_frame' into 'master'
   Added grasping frame to epick gripper
   See merge request robots/pal_robotiq_gripper!13
