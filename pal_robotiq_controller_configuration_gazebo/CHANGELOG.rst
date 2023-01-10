@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_controller_configuration_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.13 (2022-09-29)
 -------------------
 
