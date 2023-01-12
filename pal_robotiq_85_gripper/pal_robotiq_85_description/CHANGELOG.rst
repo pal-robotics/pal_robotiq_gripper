@@ -2,6 +2,14 @@
 Changelog for package pal_robotiq_85_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'fix-grasping-frame' into 'master'
+  improve gripper grasping frame position for 2f-85
+  See merge request robots/pal_robotiq_gripper!12
+* improve gripper grasping frame position for 2f-85
+* Contributors: David ter Kuile, saikishor
+
 0.0.14 (2023-01-10)
 -------------------
 
