@@ -302,7 +302,7 @@
     <joint name="${prefix}grasping_frame_joint" type="fixed">
       <parent link="${prefix}base_link" />
       <child link="${prefix}grasping_frame" />
-      <origin xyz="0 0 0.12" rpy="0 -1.5708 0" />
+      <origin xyz="0 0 0.10" rpy="0 -1.5708 0" />
     </joint>
     <link name="${prefix}grasping_frame">
       <inertial>
