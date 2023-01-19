@@ -20,7 +20,9 @@ class GripperGrasp(object):
         # Init Gripper grasp node
         rospy.loginfo("Initializing Gripper Grasper...")
 
-        rospy.loginfo(rospy.get_param("pal_robot_info/type"))
+
+        self.on_optimal_close = False
+        self.is_grasped_msg = Bool()
 
         # Get the params from param server
         self.controller_name = rospy.get_param("~controller_name", None)
@@ -28,8 +30,7 @@ class GripperGrasp(object):
             rospy.logerr("No controller name found in param: ~controller_name")
             exit(1)
 
-        self.is_grasped_msg = Bool()
-        self.on_optimal_close = False
+    
 
         # Publish a human readable status of the vacuum gripper
         self.gripper_motor_name = rospy.get_param("~gripper_motor_name", None)
@@ -44,12 +45,16 @@ class GripperGrasp(object):
         self.ddr = DDynamicReconfigure(
             self.controller_name + "_grasp_service")
         self.rate = self.ddr.add_variable("rate",
-                                  "Rate Hz at which the node closing will do stuff",
-                                  25, 10, 50)
+                                          "Rate Hz at which the node closing will do stuff",
+                                          25, 10, 50)
+
         self.pressure_configuration = self.ddr.add_variable("pressure",
                                           "Requested vacuum/pressure",
                                           1.0, 0.1, 1.0)
         self.ddr.start(self.ddr_cb)
+        rospy.loginfo("Initialized dynamic reconfigure on: " +
+                      str(rospy.get_name()))
+
         # Publisher on the gripper command topic
         self.cmd_pub = rospy.Publisher('/' + self.controller_name + '_controller/command',
                                        Float64,
