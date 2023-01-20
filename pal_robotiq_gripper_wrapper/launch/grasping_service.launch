@@ -10,6 +10,7 @@
         <!-- Dynamic reconfigure parameters -->
         <param name="grasper/timeout" type="double" value="2.0"/>
         <param name="grasper/closing_time" type="double" value="1.0"/>
+        <param name="grasper/opening_time" type="double" value="1.0"/>
         <param name="grasper/pressure_configuration" type="double" value="0.08"/>
         <param name="model" type="string" value="$(arg model)"/>
     </node>

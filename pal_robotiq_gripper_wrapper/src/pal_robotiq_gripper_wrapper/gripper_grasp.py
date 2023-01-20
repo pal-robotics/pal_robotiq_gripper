@@ -7,7 +7,11 @@ Grasp controller to close with a determined error on position only
 so to skip overheating.
 
 """
-from abc import ABC, abstractmethod
+## Imports to make python 2 and 3 compatible with the same syntax
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+import abc
+
 import rospy
 from control_msgs.msg import JointTrajectoryControllerState
 from std_msgs.msg import String, UInt8
@@ -18,13 +22,16 @@ from std_msgs.msg import Bool
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
 
 
-class GripperGraspBase(ABC):
+class GripperGraspBase(object):
+    __metaclass__ = abc.ABCMeta # For Python 2
+
     def __init__(self):
         rospy.loginfo("Initializing Gripper Grasper...")
 
         # Get the params from param server
         self.last_state = None
         self.on_optimal_close = False
+        self.on_optimal_open = False
         self.is_grasped_msg = Bool()
 
         self.controller_name = rospy.get_param("~controller_name", None)
@@ -57,6 +64,9 @@ class GripperGraspBase(ABC):
                                              2.0, 2.0, 5.0)
         self.closing_time = self.ddr.add_variable("closing_time",
                                                   "Time for the closing goal",
+                                                  0.2, 0.01, 5.0)
+        self.opening_time = self.ddr.add_variable("opening_time",
+                                                  "Time for the open goal",
                                                   0.2, 0.01, 5.0)
         self.rate = self.ddr.add_variable("rate",
                                           "Rate Hz at which the node closing will do stuff",
@@ -92,6 +102,15 @@ class GripperGraspBase(ABC):
         rospy.loginfo("Offering grasp service on: " +
                       str(self.grasp_srv.resolved_name))
         rospy.loginfo("Done initializing Gripper Grasp Service!")
+
+        # Release service to offer
+        self.release_srv = rospy.Service('/' + self.controller_name + '_controller/release',
+                                         Empty,
+                                         self.release_cb)
+        rospy.loginfo("Offering release service on: " +
+                      str(self.release_srv.resolved_name))
+        rospy.loginfo("Done initializing Gripper Release Service!")
+
         self.pub_js = rospy.Publisher(
             "{}/is_grasped".format(self.controller_name), Bool, queue_size=1)
 
@@ -104,15 +123,16 @@ class GripperGraspBase(ABC):
         else:
             self.timeout = config['timeout']
         self.closing_time = config['closing_time']
+        self.opening_time = config['opening_time']
         self.pressure_configuration = config['pressure']
         self.rate = config['rate']
         return config
 
-    @abstractmethod
+    @abc.abstractmethod
     def state_cb(self, data):
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def check_is_grasped(self):
         pass
 
@@ -127,7 +147,9 @@ class GripperGraspBase(ABC):
         r = rospy.Rate(self.rate)
         closing_amount = self.close_configuration
         # Initial command, wait for it to do something
-        self.send_close(closing_amount)
+        rospy.loginfo("Closing: " + str(closing_amount))
+        self.send_joint_trajectory(
+            closing_amount, self.closing_time, self.on_optimal_close)
         while not rospy.is_shutdown() and \
             (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
                 not self.on_optimal_close and self.last_state:
@@ -135,24 +157,43 @@ class GripperGraspBase(ABC):
                 closing_amount = [
                     self.last_state.actual.positions[0]+self.pressure_configuration]
                 self.on_optimal_close = True
-                self.send_close(closing_amount)
+                rospy.loginfo("Closing: " + str(closing_amount))
+                self.send_joint_trajectory(
+                    closing_amount, self.closing_time, self.on_optimal_close)
             r.sleep()
 
         return EmptyResponse()
 
-    def send_close(self, closing_amount):
-        rospy.loginfo("Closing: " + str(closing_amount))
+    def release_cb(self, req):
+        rospy.logdebug("Received release request!")
+        # From wherever we are opening gripper
+        self.on_optimal_open = False
+
+        open_amount = [0.0] * len(self.real_joint_names)
+        # Initial command, wait for it to do something
+        if self.on_optimal_open is False:
+            rospy.loginfo("Opening: " + str(open_amount))
+            self.send_joint_trajectory(
+                open_amount, self.opening_time, self.on_optimal_open)
+            self.on_optimal_close = False
+            rospy.sleep(self.opening_time)
+
+        return EmptyResponse()
+
+    def send_joint_trajectory(self, joint_positions, execution_time, goal_position_reached):
         jt = JointTrajectory()
         jt.joint_names = self.real_joint_names
         jt.header.stamp = rospy.Time.now()
         p = JointTrajectoryPoint()
-        p.positions = closing_amount
-        if self.on_optimal_close == True:
+        p.positions = joint_positions
+
+        # on_optimal_position can be either for on_optimal_close or on_optimal_open
+        if goal_position_reached == True:
             # Duration after grasping
             p.time_from_start = rospy.Duration(0.2)
         else:
             # Duration of the grasping
-            p.time_from_start = rospy.Duration(self.closing_time)
+            p.time_from_start = rospy.Duration(execution_time)
         jt.points.append(p)
 
         self.cmd_pub.publish(jt)
@@ -160,7 +201,7 @@ class GripperGraspBase(ABC):
 
 class GripperGrasp(GripperGraspBase):
     def __init__(self):
-        super().__init__()
+        super(GripperGrasp, self).__init__()
 
         # Publish a human readable status of the gripper
         self.gripper_motor_name = rospy.get_param("~gripper_motor_name", None)
@@ -227,7 +268,7 @@ class GripperGrasp(GripperGraspBase):
 
 class GripperGraspSim(GripperGraspBase):
     def __init__(self):
-        super().__init__()
+        super(GripperGraspSim, self).__init__()
 
     def state_cb(self, data):
         self.last_state = data
