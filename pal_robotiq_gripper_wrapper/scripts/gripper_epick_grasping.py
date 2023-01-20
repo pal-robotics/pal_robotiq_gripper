@@ -70,6 +70,14 @@ class GripperGrasp(object):
                       str(self.grasp_srv.resolved_name))
         rospy.loginfo("Done initializing Gripper Grasp Service!")
 
+        # Release service to offer
+        self.release_srv = rospy.Service('/' + self.controller_name + '_controller/release',
+                                       Empty,
+                                       self.release_cb)
+        rospy.loginfo("Offering release service on: " +
+                      str(self.release_srv.resolved_name))
+        rospy.loginfo("Done initializing Gripper Release Service!")
+
 
     def ddr_cb(self, config, level):
         self.pressure_configuration = config['pressure']
@@ -94,6 +102,13 @@ class GripperGrasp(object):
         if self.on_optimal_close == False:
             self.send_command(0.0)
         return EmptyResponse()
+    
+    def release_cb(self, req):
+        rospy.logdebug("Received release request!")
+        # Desactivate the vacuum gripper
+        self.send_command(0.0)
+        return EmptyResponse()
+
 
     def send_command(self, pressure_amount):
         rospy.loginfo("Requested vacuum/pressure: " + str(pressure_amount))

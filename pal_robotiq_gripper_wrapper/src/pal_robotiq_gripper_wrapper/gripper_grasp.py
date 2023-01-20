@@ -167,7 +167,7 @@ class GripperGraspBase(object):
     def release_cb(self, req):
         rospy.logdebug("Received release request!")
         # From wherever we are opening gripper
-        self.on_optimal_open = False
+        self.on_optimal_close = False
 
         open_amount = [0.0] * len(self.real_joint_names)
         # Initial command, wait for it to do something
@@ -176,6 +176,7 @@ class GripperGraspBase(object):
             self.send_joint_trajectory(
                 open_amount, self.opening_time, self.on_optimal_open)
             self.on_optimal_close = False
+            self.on_optimal_open = True
             rospy.sleep(self.opening_time)
 
         return EmptyResponse()
