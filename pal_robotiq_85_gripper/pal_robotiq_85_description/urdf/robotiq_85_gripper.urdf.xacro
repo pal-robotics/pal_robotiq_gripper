@@ -22,10 +22,9 @@
     </gazebo>
   </xacro:macro>
 
-  <!-- Add a grasp check hack that attach the object to the parent link when grasped by the gripper to prevent it from falling -->
-  <xacro:macro name="grasp_hack" params="name name_prefix_left name_prefix_right parent_joint">
+  <xacro:macro name="gazebo_gripper_grasp" params="name name_prefix_left name_prefix_right parent_joint">
     <gazebo>
-      <gripper name="${name}_grasp_hack">
+      <gripper name="${name}">
         <grasp_check>
           <attach_steps>3</attach_steps>    <!-- should not be set to 1 because can cause segfault-->
           <detach_steps>1</detach_steps>    <!-- should not change otherwise the object will be attached to the gripper too much time -->
@@ -412,7 +411,7 @@
     <xacro:finger_joint prefix="${prefix}"/>
     <xacro:right_outer_knuckle_joint prefix="${prefix}"/>
     <xacro:robotiq_85_gripper_transmission prefix="${prefix}"/>
-    <xacro:grasp_hack name="${prefix}grasp_hack" name_prefix_left="${prefix}left_inner_finger" name_prefix_right="${prefix}right_inner_finger" parent_joint="${parent}"/>
+    <xacro:gazebo_gripper_grasp name="${prefix}grasp" name_prefix_left="${prefix}left_inner_finger" name_prefix_right="${prefix}right_inner_finger" parent_joint="${parent}"/>
   </xacro:macro>
 
 </robot>
