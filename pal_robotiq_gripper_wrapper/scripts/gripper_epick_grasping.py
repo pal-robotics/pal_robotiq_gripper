@@ -45,16 +45,12 @@ class GripperGrasp(object):
         self.ddr = DDynamicReconfigure(
             self.controller_name + "_grasp_service")
         self.rate = self.ddr.add_variable("rate",
-                                          "Rate Hz at which the node closing will do stuff",
-                                          25, 10, 50)
-
+                                  "Rate Hz at which the node closing will do stuff",
+                                  25, 10, 50)
         self.pressure_configuration = self.ddr.add_variable("pressure",
                                           "Requested vacuum/pressure",
                                           1.0, 0.1, 1.0)
         self.ddr.start(self.ddr_cb)
-        rospy.loginfo("Initialized dynamic reconfigure on: " +
-                      str(rospy.get_name()))
-
         # Publisher on the gripper command topic
         self.cmd_pub = rospy.Publisher('/' + self.controller_name + '_controller/command',
                                        Float64,

@@ -8,9 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   trajectory_msgs
   std_msgs
 )
+
 catkin_python_setup()
-
-
 
 catkin_package(
 #  INCLUDE_DIRS include
