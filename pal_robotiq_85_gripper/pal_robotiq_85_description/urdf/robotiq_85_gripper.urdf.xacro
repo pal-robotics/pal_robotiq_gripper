@@ -324,9 +324,43 @@
     <joint name="${prefix}grasping_frame_joint" type="fixed">
       <parent link="${prefix}base_link" />
       <child link="${prefix}grasping_frame" />
-      <origin xyz="0 0 0.10" rpy="0 -1.5708 0" />
+      <origin xyz="0 0 0.11" rpy="0 -1.5708 0" />
     </joint>
     <link name="${prefix}grasping_frame">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.0001" />
+        <inertia ixx="0.00001" ixy="0.0" ixz="0.0"
+                 iyy="0.00001" iyz="0.0"
+                 izz="0.00001" />
+      </inertial>
+    </link>
+  </xacro:macro>
+  <!-- Grasping frame Y -->
+  <xacro:macro name="pal_robotiq_grasping_frame_Y" params="prefix">
+    <joint name="${prefix}grasping_frame_Y_joint" type="fixed">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}grasping_frame_Y" />
+      <origin xyz="0 0 0.11" rpy="1.5708 0 -3.1416" />
+    </joint>
+    <link name="${prefix}grasping_frame_Y">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.0001" />
+        <inertia ixx="0.00001" ixy="0.0" ixz="0.0"
+                 iyy="0.00001" iyz="0.0"
+                 izz="0.00001" />
+      </inertial>
+    </link>
+  </xacro:macro>
+    <!-- Grasping frame Z -->
+  <xacro:macro name="pal_robotiq_grasping_frame_Z" params="prefix">
+    <joint name="${prefix}grasping_frame_Z_joint" type="fixed">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}grasping_frame_Z" />
+      <origin xyz="0 0 0.11" rpy="0 0 0" />
+    </joint>
+    <link name="${prefix}grasping_frame_Z">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <mass value="0.0001" />
@@ -401,6 +435,8 @@
   <xacro:macro name="robotiq_85_gripper" params="prefix parent *origin">
     <xacro:robotiq_base_link prefix="${prefix}"/>
     <xacro:pal_robotiq_grasping_frame prefix="${prefix}"/>
+    <xacro:pal_robotiq_grasping_frame_Y prefix="${prefix}"/>
+    <xacro:pal_robotiq_grasping_frame_Z prefix="${prefix}"/>
     <xacro:pal_robotiq_coupling_link prefix="${prefix}"/>
     <xacro:finger_links prefix="${prefix}" fingerprefix="left" reflect="1"/>
     <xacro:finger_links prefix="${prefix}" fingerprefix="right" reflect="-1"/>

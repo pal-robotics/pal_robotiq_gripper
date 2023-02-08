@@ -127,6 +127,36 @@
                 izz="0.00001" />
       </inertial>
     </link>
+    <!-- Graping Frame Y -->
+    <joint name="${prefix}grasping_frame_Y_joint" type="fixed">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}grasping_frame_Y" />
+      <origin xyz="0 0 0.135" rpy="1.5708 0 -3.1416" />
+    </joint>
+    <link name="${prefix}grasping_frame_Y">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.0001" />
+        <inertia ixx="0.00001" ixy="0.0" ixz="0.0"
+                iyy="0.00001" iyz="0.0"
+                izz="0.00001" />
+      </inertial>
+    </link>
+    <!-- Graping Frame Z -->
+    <joint name="${prefix}grasping_frame_Z_joint" type="fixed">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}grasping_frame_Z" />
+      <origin xyz="0 0 0.135" rpy="0 0 3.1416" />
+    </joint>
+    <link name="${prefix}grasping_frame_Z">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.0001" />
+        <inertia ixx="0.00001" ixy="0.0" ixz="0.0"
+                iyy="0.00001" iyz="0.0"
+                izz="0.00001" />
+      </inertial>
+    </link>
     <xacro:robotiq_epick_gripper_transmission prefix="${prefix}"/>
   </xacro:macro>
 </robot>
