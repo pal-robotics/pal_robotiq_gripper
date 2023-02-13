@@ -164,7 +164,7 @@ class GripperGrasp(object):
     def grasp_cb(self, req):
         rospy.logdebug("Received grasp request!")
         # From wherever we are close gripper
-        self.on_optimal_close = False
+        self.on_optimal_open = False
         # Keep closing until the error of the state reaches
         # max_position_error on any of the gripper joints
         # or we reach timeout
