@@ -9,8 +9,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
-catkin_python_setup()
-
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES pal_robotiq_gripper_wrapper
@@ -32,7 +30,6 @@ include_directories(
 install(PROGRAMS
   scripts/gripper_grasping.py
   scripts/gripper_epick_grasping.py
-  scripts/gripper_grasping_simulation.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
