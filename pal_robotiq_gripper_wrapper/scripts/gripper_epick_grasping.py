@@ -20,7 +20,9 @@ class GripperGrasp(object):
         # Init Gripper grasp node
         rospy.loginfo("Initializing Gripper Grasper...")
 
-        rospy.loginfo(rospy.get_param("pal_robot_info/type"))
+
+        self.on_optimal_close = False
+        self.is_grasped_msg = Bool()
 
         # Get the params from param server
         self.controller_name = rospy.get_param("~controller_name", None)
@@ -28,8 +30,7 @@ class GripperGrasp(object):
             rospy.logerr("No controller name found in param: ~controller_name")
             exit(1)
 
-        self.is_grasped_msg = Bool()
-        self.on_optimal_close = False
+    
 
         # Publish a human readable status of the vacuum gripper
         self.gripper_motor_name = rospy.get_param("~gripper_motor_name", None)
@@ -65,6 +66,14 @@ class GripperGrasp(object):
                       str(self.grasp_srv.resolved_name))
         rospy.loginfo("Done initializing Gripper Grasp Service!")
 
+        # Release service to offer
+        self.release_srv = rospy.Service('/' + self.controller_name + '_controller/release',
+                                       Empty,
+                                       self.release_cb)
+        rospy.loginfo("Offering release service on: " +
+                      str(self.release_srv.resolved_name))
+        rospy.loginfo("Done initializing Gripper Release Service!")
+
 
     def ddr_cb(self, config, level):
         self.pressure_configuration = config['pressure']
@@ -89,6 +98,13 @@ class GripperGrasp(object):
         if self.on_optimal_close == False:
             self.send_command(0.0)
         return EmptyResponse()
+    
+    def release_cb(self, req):
+        rospy.logdebug("Received release request!")
+        # Desactivate the vacuum gripper
+        self.send_command(0.0)
+        return EmptyResponse()
+
 
     def send_command(self, pressure_amount):
         rospy.loginfo("Requested vacuum/pressure: " + str(pressure_amount))

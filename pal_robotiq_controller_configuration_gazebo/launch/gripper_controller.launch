@@ -3,18 +3,16 @@
   <arg name="model"/> <!-- Current models are robotiq-2f-85 and robotiq-2f-140 -->
   <arg name="side" default=""/>
   <arg name="suffix" value="$(eval ('' if side == '' else '_' + side))"/>
-  <node name="gripper$(arg suffix)_controllers_spawner"
-        pkg="controller_manager" type="spawner" output="screen"
-        args="--timeout 120
-              gripper$(arg suffix)_controller" />
+
+  <include file="$(find pal_robotiq_controller_configuration)/launch/gripper_controller.launch">
+    <arg name="model" value="$(arg model)"/>
+    <arg name="side" value="$(arg side)"/>
+  </include>
+
   <node name="home_gripper$(arg suffix)" pkg="pal_robotiq_controller_configuration" type="home_gripper.py" output="screen" if="$(eval arg('model') != 'robotiq-epick')">
     <param name="suffix" value="$(arg suffix)"/>
   </node>
   <rosparam command="load" file="$(find pal_robotiq_controller_configuration_gazebo)/config/pids$(arg suffix).yaml" ns="/gains" />
-  <include file="$(find pal_robotiq_gripper_wrapper)/launch/grasping_service.launch">
-    <arg name="model" value="$(arg model)"/>
-    <arg name="side" value="$(arg side)"/>
-    <arg name="simulation" value="True"/>
-  </include>
+
 </launch>
 
