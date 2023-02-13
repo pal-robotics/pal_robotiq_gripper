@@ -3,7 +3,7 @@
   <xacro:include filename="$(find pal_robotiq_140_description)/urdf/robotiq_140_gripper.transmission.xacro" />
   <xacro:property name="finger_joint_damping" value="0.0025"/>
   <xacro:property name="finger_joint_friction" value="0.0"/>
-  <xacro:macro name="mimic_joint_plugin_gazebo" params="name_prefix parent_joint mimic_joint has_pid:=false multiplier:=1.0 offset:=0 sensitiveness:=0.0 max_effort:=0.05 robot_namespace:=''">
+  <xacro:macro name="mimic_joint_plugin_gazebo" params="name_prefix parent_joint mimic_joint has_pid:=false multiplier:=1.0 offset:=0 sensitiveness:=0.0 max_effort:=0.12 robot_namespace:=''">
     <gazebo>
       <plugin name="${name_prefix}mimic_joint_plugin" filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so">
         <joint>${parent_joint}</joint>
@@ -19,6 +19,22 @@
           <robotNamespace>${robot_namespace}</robotNamespace>
         </xacro:unless>
       </plugin>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Add a grasp hack that attach the object when grasped by the gripper to prevent it from falling -->
+  <xacro:macro name="gazebo_gripper_grasp" params="name name_prefix_left name_prefix_right parent_joint">
+    <gazebo>
+      <gripper name="${name}">
+        <grasp_check>
+          <attach_steps>3</attach_steps>
+          <detach_steps>1</detach_steps>    <!-- should not change otherwise the object will be attached to the gripper too much time -->
+          <min_contact_count>3</min_contact_count>
+        </grasp_check>
+        <gripper_link>${name_prefix_left}</gripper_link>
+        <gripper_link>${name_prefix_right}</gripper_link>
+        <palm_link>${parent_joint}</palm_link>
+      </gripper>
     </gazebo>
   </xacro:macro>
 
@@ -107,10 +123,10 @@
     <gazebo reference="${prefix}${fingerprefix}_inner_knuckle">
       <kp>1000000.0</kp>
       <kd>100.0</kd>
-      <mu1>1000.0</mu1>
-      <mu2>1000.0</mu2>
+      <mu1>Inf</mu1>
+      <mu2>Inf</mu2>
       <fdir1>0 0 0</fdir1>
-      <maxVel>1.0</maxVel>
+      <maxVel>0.0</maxVel>
       <minDepth>0.01</minDepth>
       <material>Gazebo/DarkGrey</material>
     </gazebo>
@@ -142,13 +158,30 @@
       </collision>
     </link>
     <gazebo reference="${prefix}${fingerprefix}_inner_finger">
-      <kp>1000000.0</kp>
+      <collision name="${prefix}${fingerprefix}_inner_finger">
+        <surface>
+          <friction>
+            <torsional>
+              <coefficient>1000.0</coefficient>
+              <use_patch_radius>true</use_patch_radius>
+              <patch_radius>0.1</patch_radius>
+            </torsional>
+          </friction>
+          <contact>
+            <poissons_ratio>1.0</poissons_ratio>
+            <elastic_modulus>Inf</elastic_modulus>
+          </contact>
+        </surface>
+      </collision>
+      <mu1>Inf</mu1>
+      <mu2>Inf</mu2>
+      <maxVel>0.0</maxVel>
+      <kp>Inf</kp>
       <kd>100.0</kd>
-      <mu1>1000.0</mu1>
-      <mu2>1000.0</mu2>
-      <fdir1>0 0 0</fdir1>
-      <maxVel>1.0</maxVel>
+      <fdir1>1 0 0</fdir1>
+      <maxVel>0.0</maxVel>
       <minDepth>0.01</minDepth>
+      <maxContacts>10</maxContacts>
       <material>Gazebo/DarkGrey</material>
     </gazebo>
   </xacro:macro>
@@ -175,16 +208,6 @@
         </material>
       </collision>
     </link>
-    <gazebo reference="${prefix}${fingerprefix}_inner_finger_pad">
-      <kp>1000000.0</kp>
-      <kd>100.0</kd>
-      <mu1>1000.0</mu1>
-      <mu2>1000.0</mu2>
-      <fdir1>0 0 0</fdir1>
-      <maxVel>1.0</maxVel>
-      <minDepth>0.01</minDepth>
-      <material>Gazebo/LightGrey</material>
-    </gazebo>
   </xacro:macro>
 
   <xacro:macro name="outer_finger_joint" params="prefix fingerprefix">
@@ -202,7 +225,7 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}${fingerprefix}_inner_knuckle" />
       <axis xyz="1 0 0" />
-      <limit lower="-0.8757" upper="0.8757" velocity="2" effort="0.05" />
+      <limit lower="-0.8757" upper="0.8757" velocity="2" effort="0.12" />
       <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
     </joint>
     <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}${fingerprefix}mimic_robotiq_85_1" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}${fingerprefix}_inner_knuckle_joint" has_pid="false" multiplier="-1.0" offset="0.0"/>
@@ -214,7 +237,7 @@
       <parent link="${prefix}${fingerprefix}_outer_finger" />
       <child link="${prefix}${fingerprefix}_inner_finger" />
       <axis xyz="1 0 0" />
-      <limit lower="-0.8757" upper="0.8757" velocity="2" effort="0.05" />
+      <limit lower="-0.8757" upper="0.8757" velocity="2" effort="0.12" />
       <mimic joint="${prefix}finger_joint" multiplier="1" offset="0" />
     </joint>
     <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}${fingerprefix}mimic_robotiq_85_1" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}${fingerprefix}_inner_finger_joint" has_pid="false" multiplier="1.0" offset="0.0"/>
@@ -292,7 +315,7 @@
     <joint name="${prefix}grasping_frame_joint" type="fixed">
       <parent link="${prefix}base_link" />
       <child link="${prefix}grasping_frame" />
-      <origin xyz="0 0 0.10" rpy="0 -1.5708 0" />
+      <origin xyz="0 0 0.14" rpy="0 -1.5708 0" />
     </joint>
     <link name="${prefix}grasping_frame">
       <inertial>
@@ -342,7 +365,7 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}left_outer_knuckle" />
       <axis xyz="-1 0 0" />
-      <limit lower="0" upper="0.7" velocity="2" effort="0.05" />
+      <limit lower="0" upper="0.7" velocity="2" effort="0.12" />
       <dynamics damping="0.03"/>
     </joint>
     <gazebo reference="${prefix}finger_joint">
@@ -358,7 +381,7 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}right_outer_knuckle" />
       <axis xyz="1 0 0" />
-      <limit lower="-0.725" upper="0.725" velocity="2" effort="0.05" />
+      <limit lower="-0.725" upper="0.725" velocity="2" effort="0.12" />
     <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
     </joint>
     <xacro:mimic_joint_plugin_gazebo name_prefix="${prefix}mimic_robotiq_85_5" parent_joint="${prefix}finger_joint" mimic_joint="${prefix}right_outer_knuckle_joint" has_pid="false" multiplier="-1.0" offset="0.0"/>
@@ -378,5 +401,7 @@
     <xacro:finger_joint prefix="${prefix}"/>
     <xacro:right_outer_knuckle_joint prefix="${prefix}"/>
     <xacro:robotiq_140_gripper_transmission prefix="${prefix}"/>
+    <!--This xacro is used to be able to grasp object in simulmation more robustly, it could cause segfault at grasping time -->
+    <xacro:gazebo_gripper_grasp name="${prefix}grasp" name_prefix_left="${prefix}left_inner_finger" name_prefix_right="${prefix}right_inner_finger" parent_joint="${parent}"/>
   </xacro:macro>
 </robot>

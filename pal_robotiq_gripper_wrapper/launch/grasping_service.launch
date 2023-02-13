@@ -3,6 +3,7 @@
     <arg name="side" default=""/>
     <arg name="suffix" value="$(eval ('' if side == '' else '_' + side))"/>
     <arg name="model"/> <!-- Current models are robotiq-2f-85 and robotiq-2f-140 -->
+
     <node pkg="pal_robotiq_gripper_wrapper" name="gripper$(arg suffix)_grasping" type="gripper_grasping.py" output="screen" if="$(eval arg('model') != 'robotiq-epick')">
         <rosparam command="load" file="$(find pal_robotiq_gripper_wrapper)/config/$(arg model)_gripper$(arg suffix).yaml" />
         <!-- Dynamic reconfigure parameters -->
