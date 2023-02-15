@@ -2,6 +2,18 @@
 Changelog for package pal_robotiq_140_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'add_is_grasped_sim' into 'master'
+  Add is_grasped topic and fix grasping service in simulation
+  See merge request robots/pal_robotiq_gripper!11
+* comment + fusion launchfiles + modify max contact
+* Apply suggestion for naming and syntax
+* Update robotiq 140 urdf to increase effort and change grasping frame joint distance
+* Increase the attach steps to prevent the segfault
+* Add fake grasp to 140 + comment the fake grasp
+* Contributors: saikishor, thomaspeyrucain
+
 0.0.15 (2023-01-12)
 -------------------
 

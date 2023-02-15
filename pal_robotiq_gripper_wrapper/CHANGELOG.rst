@@ -2,6 +2,29 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'add_is_grasped_sim' into 'master'
+  Add is_grasped topic and fix grasping service in simulation
+  See merge request robots/pal_robotiq_gripper!11
+* Merge branch 'release-service' into 'add_is_grasped_sim'
+  Release service
+  See merge request robots/pal_robotiq_gripper!14
+* Fix typo
+* Remove simulation arg and suffix. Delete simulation only class and use use_sim_time only
+* Remove redundant lines
+* add release service for epick gripper
+* Add release service and ensure abstract class is compatible with python2 and 3
+* create base class for gripperGrasp
+* comment + fusion launchfiles + modify max contact
+* Change is_grasped topic name for the epick gripper to be consistent
+* Add fake grasp to 140 + comment the fake grasp
+* Change the is_grasped topic name
+* Add python script to the include directory
+* Improve is_grasped topic in simulation
+* Add is_grasped topic and fix grasping service in simulation
+* Contributors: David ter Kuile, saikishor, thomaspeyrucain
+
 0.0.15 (2023-01-12)
 -------------------
 

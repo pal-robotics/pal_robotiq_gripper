@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_gripper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.15 (2023-01-12)
 -------------------
 

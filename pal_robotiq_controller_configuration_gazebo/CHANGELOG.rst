@@ -2,6 +2,20 @@
 Changelog for package pal_robotiq_controller_configuration_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'add_is_grasped_sim' into 'master'
+  Add is_grasped topic and fix grasping service in simulation
+  See merge request robots/pal_robotiq_gripper!11
+* Merge branch 'release-service' into 'add_is_grasped_sim'
+  Release service
+  See merge request robots/pal_robotiq_gripper!14
+* refactor simulation launch file
+* Remove simulation arg and suffix. Delete simulation only class and use use_sim_time only
+* comment + fusion launchfiles + modify max contact
+* Add is_grasped topic and fix grasping service in simulation
+* Contributors: David ter Kuile, saikishor, thomaspeyrucain
+
 0.0.15 (2023-01-12)
 -------------------
 
