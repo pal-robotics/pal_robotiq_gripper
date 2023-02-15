@@ -115,7 +115,7 @@ class GripperGrasp(object):
 
     def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
-        bin_number = bin(struct.unpack('<B', data.data[0])[0])[2:].zfill(8)  # data range: 0 -> 255
+        bin_number = bin(data.data[0])[2:].zfill(8)  # data range: 0 -> 255
         gOBJ = hex(int(bin_number[:2],2))
         gSTA = hex(int(bin_number[2:4],2))
         gGTO = hex(int(bin_number[4],2))
