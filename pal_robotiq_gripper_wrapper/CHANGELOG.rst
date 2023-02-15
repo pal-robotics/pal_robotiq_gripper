@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.16 (2023-02-15)
+-------------------
 * Merge branch 'add_is_grasped_sim' into 'master'
   Add is_grasped topic and fix grasping service in simulation
   See merge request robots/pal_robotiq_gripper!11
