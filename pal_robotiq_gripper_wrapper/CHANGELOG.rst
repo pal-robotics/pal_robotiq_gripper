@@ -2,6 +2,15 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'fix_status_human' into 'master'
+  Update script for python 3
+  See merge request robots/pal_robotiq_gripper!16
+* Fix for python
+* Update script for python 3
+* Contributors: Jordan Palacios, thomaspeyrucain
+
 0.0.16 (2023-02-15)
 -------------------
 * Merge branch 'add_is_grasped_sim' into 'master'

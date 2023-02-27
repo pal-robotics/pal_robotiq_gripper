@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_controller_configuration_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.16 (2023-02-15)
 -------------------
 * Merge branch 'add_is_grasped_sim' into 'master'
