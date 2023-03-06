@@ -2,6 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
  
   <xacro:include filename="$(find pal_robotiq_epick_description)/urdf/robotiq_epick_gripper.transmission.xacro" />
+  <xacro:include filename="$(find tiago_description)/urdf/end_effector/grasping_frames.xacro" />
   <xacro:property name="joint_lower_limit" value="0.0" />
   <xacro:property name="joint_upper_limit" value="0.055" />
 
@@ -112,21 +113,9 @@
         <inertia ixx="1e-08" ixy="0" ixz="0" iyy="1e-08" iyz="0" izz="1e-08"/>
       </inertial>
     </link>
-    <!-- Graping Frame -->
-    <joint name="${prefix}grasping_frame_joint" type="fixed">
-      <parent link="${prefix}base_link" />
-      <child link="${prefix}grasping_frame" />
-      <origin xyz="0 0 0.135" rpy="0 -1.5708 0" />
-    </joint>
-    <link name="${prefix}grasping_frame">
-      <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <mass value="0.0001" />
-        <inertia ixx="0.00001" ixy="0.0" ixz="0.0"
-                iyy="0.00001" iyz="0.0"
-                izz="0.00001" />
-      </inertial>
-    </link>
+
+    <xacro:pal_robotiq_grasping_frames prefix="${prefix}" xyz="0 0 0.135"/>
+
     <xacro:robotiq_epick_gripper_transmission prefix="${prefix}"/>
   </xacro:macro>
 </robot>
