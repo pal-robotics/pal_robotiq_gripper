@@ -2,6 +2,9 @@
 Changelog for package pal_robotiq_gripper_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.17 (2023-02-27)
 -------------------
 * Merge branch 'fix_status_human' into 'master'

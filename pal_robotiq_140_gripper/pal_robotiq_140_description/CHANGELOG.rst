@@ -2,6 +2,15 @@
 Changelog for package pal_robotiq_140_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'mew-grasping-frames' into 'master'
+  New grasping frames
+  See merge request robots/pal_robotiq_gripper!15
+* Replaced links by grasping frames macro
+* Added Z and Y grasping frames
+* Contributors: narcismiguel, sergiacosta
+
 0.0.17 (2023-02-27)
 -------------------
 
