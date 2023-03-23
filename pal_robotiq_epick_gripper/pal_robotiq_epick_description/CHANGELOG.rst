@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_epick_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.18 (2023-03-23)
+-------------------
 * Merge branch 'mew-grasping-frames' into 'master'
   New grasping frames
   See merge request robots/pal_robotiq_gripper!15
