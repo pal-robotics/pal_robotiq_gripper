@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find pal_robotiq_85_description)/urdf/robotiq_85_gripper.transmission.xacro" />
-  <xacro:include filename="$(find tiago_description)/urdf/end_effector/grasping_frames.xacro" />
+  <xacro:include filename="$(find pal_robotiq_85_description)/urdf/grasping_frames.xacro" />
   <xacro:property name="finger_joint_damping" value="0.0025"/>
   <xacro:property name="finger_joint_friction" value="0.0"/>
   <xacro:macro name="mimic_joint_plugin_gazebo" params="name_prefix parent_joint mimic_joint has_pid:=false multiplier:=1.0 offset:=0 sensitiveness:=0.0 max_effort:=0.1 robot_namespace:=''">
