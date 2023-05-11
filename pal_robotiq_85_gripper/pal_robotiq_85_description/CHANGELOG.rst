@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_85_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.19 (2023-05-11)
+-------------------
 * Merge branch 'add-grasping-frames-raw' into 'master'
   Add grasping frames raw
   See merge request robots/pal_robotiq_gripper!17
