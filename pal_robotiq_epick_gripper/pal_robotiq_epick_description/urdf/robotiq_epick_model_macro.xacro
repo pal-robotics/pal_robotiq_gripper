@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
  
   <xacro:include filename="$(find pal_robotiq_epick_description)/urdf/robotiq_epick_gripper.transmission.xacro" />
-  <xacro:include filename="$(find tiago_description)/urdf/end_effector/grasping_frames.xacro" />
+  <xacro:include filename="$(find pal_robotiq_epick_description)/urdf/grasping_frames.xacro" />
   <xacro:property name="joint_lower_limit" value="0.0" />
   <xacro:property name="joint_upper_limit" value="0.055" />
 
