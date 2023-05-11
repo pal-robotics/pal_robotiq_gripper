@@ -2,6 +2,16 @@
 Changelog for package pal_robotiq_85_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'add-grasping-frames-raw' into 'master'
+  Add grasping frames raw
+  See merge request robots/pal_robotiq_gripper!17
+* Fix the typos
+* Modified the grasping frames xacro file path
+* Added xacro file for grasping frames
+* Contributors: Sai Kishor Kothakota, sergiacosta
+
 0.0.18 (2023-03-23)
 -------------------
 * Merge branch 'mew-grasping-frames' into 'master'
