@@ -8,19 +8,22 @@ so to skip overheating.
 
 """
 
-import rospy
+import rclpy
+from rclpy.node import Node
 from control_msgs.msg import JointTrajectoryControllerState
-from std_msgs.msg import String, UInt8
+from std_msgs.msg import String, UInt8, Bool
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from std_srvs.srv import Empty, EmptyResponse
 from sensor_msgs.msg import JointState
-from std_msgs.msg import Bool
 from ddynamic_reconfigure_python.ddynamic_reconfigure import DDynamicReconfigure
+from rcl_interfaces import ParameterType
+from rclpy.parameter import Parameter
 
 
-class GripperGrasp(object):
+class GripperGrasp(Node):
     def __init__(self):
-        rospy.loginfo("Initializing Gripper Grasper...")
+        super().__init__('gripper_grasping')
+        self.get_logger().info("Initializing Gripper Grasper...")
 
         # Get the params from param server
         self.last_state = None
@@ -29,99 +32,99 @@ class GripperGrasp(object):
         self.is_grasped_msg = Bool()
 
         # Check if simulation is running
-        self.use_sim_time = rospy.get_param("/use_sim_time", False)
+        self.use_sim_time = self.declare_parameter(
+            "/use_sim_time", Parameter.Type.BOOL, False).value
 
-        self.controller_name = rospy.get_param("~controller_name", None)
+        self.controller_name = self.declare_parameter(
+            "~controller_name", Parameter.Type.STRING, None).value
+
         if not self.controller_name:
-            rospy.logerr("No controller name found in param: ~controller_name")
-            exit(1)
-        self.real_joint_names = rospy.get_param("~real_joint_names", None)
+            self.get_logger().error("No controller name found in param: ~controller_name")
+            self.destroy_node()
+        self.real_joint_names = self.declare_parameter(
+            "~real_joint_names", Parameter.Type.STRING, None).value
         if not self.real_joint_names:
-            rospy.logerr(
-                "No real joint names given in param: ~real_joint_names")
-            exit(1)
-        self.close_configuration = rospy.get_param(
-            "~close_configuration", None)
+            self.get_logger().error("No real joint names given in param: ~real_joint_names")
+            self.destroy_node()
+        self.close_configuration = self.declare_parameter(
+            "~close_configuration", Parameter.Type.DOUBLE_ARRAY, None).value
         if not self.close_configuration:
-            rospy.logerr(
+            self.get_logger().error(
                 "No close configuration values given in param: ~close_configuration")
-            exit(1)
+            self.destroy_node()
         if len(self.close_configuration) != len(self.real_joint_names):
-            rospy.logerr(
-                "The close configuration values defined in param: ~close_configuration"
-                ", should be of same length as that of joints in param: ~real_joint_names")
-            exit(1)
+            self.get_logger().error("The close configuration values defined in param: ~close_configuration"
+                                    ", should be of same length as that of joints in param: ~real_joint_names")
+            self.destroy_node()
 
-        # This node Dynamic params
-        self.ddr = DDynamicReconfigure(
-            self.controller_name + "_grasp_service")
+        # # This node Dynamic params
+        # self.ddr = DDynamicReconfigure(
+        #     self.controller_name + "_grasp_service")
+        
+        # self.timeout = self.declare_parameter("timeout", 2.0,
+        #                                       "timeout fort to use dynamic parameters in my ROS2 code. I defined a callback function, if a parameter is changed with following line: the closing action", )
 
-        self.timeout = self.ddr.add_variable("timeout",
-                                             "timeout for the closing action",
-                                             2.0, 2.0, 5.0)
-        self.closing_time = self.ddr.add_variable("closing_time",
-                                                  "Time for the closing goal",
-                                                  0.2, 0.01, 5.0)
-        self.rate = self.ddr.add_variable("rate",
-                                          "Rate Hz at which the node closing will do stuff",
-                                          25, 10, 50)
+        # self.timeout = self.ddr.add_variable("timeout",
+        #                                      "timeout for the closing action",
+        #                                      2.0, 2.0, 5.0)
+        # self.closing_time = self.ddr.add_variable("closing_time",
+        #                                           "Time for the closing goal",
+        #                                           0.2, 0.01, 5.0)
+        # self.rate = self.ddr.add_variable("rate",
+        #                                   "Rate Hz at which the node closing will do stuff",
+        #                                   25, 10, 50)
 
-        self.pressure_configuration = self.ddr.add_variable("pressure",
-                                          "Aditional distance to apply more or less pressure",
-                                          0.08, 0.05, 0.2)
+        # self.pressure_configuration = self.ddr.add_variable("pressure",
+        #                                                     "Aditional distance to apply more or less pressure",
+        #                                                     0.08, 0.05, 0.2)
 
-        self.ddr.start(self.ddr_cb)
-        rospy.loginfo("Initialized dynamic reconfigure on: " +
-                      str(rospy.get_name()))
+        # self.ddr.start(self.ddr_cb)
+        # self.get_logger("Initialized dynamic reconfigure on: " + str(rclpy.get_name()))
 
         # Set opening time of gripper
         self.opening_time = 0.02
 
         # Subscriber to the gripper state
-        self.state_sub = rospy.Subscriber('/' + self.controller_name + '_controller/state',
-                                          JointTrajectoryControllerState,
-                                          self.state_cb,
-                                          queue_size=1)
-        rospy.loginfo("Subscribed to topic: " +
-                      str(self.state_sub.resolved_name))
+        self.state_sub = self.create_subscription(JointTrajectoryControllerState, 
+                                                  self.controller_name + 
+                                                  '_controller/state', '/' + self.state_cb, 1)
+        self.get_logger("Subscribed to topic: " + str(self.state_sub.resolved_name))
 
         # Publisher on the gripper command topic
-        self.cmd_pub = rospy.Publisher('/' + self.controller_name + '_controller/command',
-                                       JointTrajectory,
-                                       queue_size=1)
-        rospy.loginfo("Publishing to topic: " +
-                      str(self.cmd_pub.resolved_name))
+        self.cmd_pub = self.create_publisher(JointTrajectory, '/' + self.controller_name 
+                                             + '_controller/command', queue_size=1)
+        self.get_logger("Publishing to topic: " + str(self.cmd_pub.resolved_name))
 
         # Grasping service to offer
-        self.grasp_srv = rospy.Service('/' + self.controller_name + '_controller/grasp',
-                                       Empty,
-                                       self.grasp_cb)
-        rospy.loginfo("Offering grasp service on: " +
+        self.grasp_srv = self.create_service(Empty, '/' + self.controller_name + 
+                                             '_controller/grasp', self.grasp_cb)
+        self.get_logger("Offering grasp service on: " +
                       str(self.grasp_srv.resolved_name))
-        rospy.loginfo("Done initializing Gripper Grasp Service!")
+        self.get_logger("Done initializing Gripper Grasp Service!")
 
         # Release service to offer
-        self.release_srv = rospy.Service('/' + self.controller_name + '_controller/release',
-                                         Empty,
-                                         self.release_cb)
-        rospy.loginfo("Offering release service on: " +
+        self.release_srv = self.create_service(Empty, '/' + self.controller_name +
+                                               '_controller/release', self.release_cb)
+        self.get_logger("Offering release service on: " +
                       str(self.release_srv.resolved_name))
-        rospy.loginfo("Done initializing Gripper Release Service!")
+        self.get_logger("Done initializing Gripper Release Service!")
 
         # Publish a human readable status of the gripper (Only available in non simulation)
         if not self.use_sim_time:
-            self.gripper_motor_name = rospy.get_param(
-                "~gripper_motor_name", None)
-            self.sub_gs = rospy.Subscriber("{}/gripper_status".format(self.gripper_motor_name),
-                                           UInt8, self.grip_status_cb, queue_size=1)
-            self.pub_gth = rospy.Publisher(
-                "{}/gripper_status_human".format(self.gripper_motor_name), String, queue_size=1)
+            self.gripper_motor_name = self.declare_parameter(
+                "~gripper_motor_name", None).value
+            self.sub_gs = self.create_subscription(UInt8, 
+                                                   "{}/gripper_status".format(self.gripper_motor_name),
+                                                    self.grip_status_cb, 1)
+            self.pub_gth = self.create_publisher(String, 
+                                                 "{}/gripper_status_human".format(self.gripper_motor_name), 1)
 
-        self.pub_js = rospy.Publisher(
-            "{}/is_grasped".format(self.controller_name), Bool, queue_size=1)
+        self.pub_js = self.create_publisher(Bool, "{}/is_grasped".format(self.controller_name),
+                                            1)
 
     def ddr_cb(self, config, level):
-        rospy.loginfo("timeout" + str(config['timeout']) + "closing_time" + str(config['closing_time']))
+        self.get_logger(
+            "timeout" + str(config['timeout']) + "closing_time" + str(config['closing_time']))
         if config['timeout'] - 2 <= config['closing_time']:
             self.timeout = config['closing_time'] + 2
             config['timeout'] = config['closing_time'] + 2
@@ -153,7 +156,8 @@ class GripperGrasp(object):
         # If in simulation
         if self.use_sim_time:
             if self.last_state.error.positions[0] >= 0.03:
-                rospy.sleep(1)
+                # rospy.sleep(1)
+                return
             if self.last_state.error.positions[0] >= 0.03:
                 return True
             return False
@@ -162,12 +166,14 @@ class GripperGrasp(object):
             return self.is_grasped_msg.data
 
     def grasp_cb(self, req):
-        rospy.logdebug("Received grasp request!")
+        self.get_logger().debug("Received grasp request!")
         # From wherever we are close gripper
         self.on_optimal_open = False
         # Keep closing until the error of the state reaches
         # max_position_error on any of the gripper joints
         # or we reach timeout
+
+        # CREAR TIMER!!!
         initial_time = rospy.Time.now()
         r = rospy.Rate(self.rate)
         closing_amount = self.close_configuration
@@ -176,10 +182,11 @@ class GripperGrasp(object):
         self.send_joint_trajectory(
             closing_amount, self.closing_time, self.on_optimal_close)
         while not rospy.is_shutdown() and \
-                  (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
-                  not self.on_optimal_close and self.last_state:
+            (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
+                not self.on_optimal_close and self.last_state:
             if self.check_is_grasped():
-                closing_amount = [self.last_state.actual.positions[0]+self.pressure_configuration]
+                closing_amount = [
+                    self.last_state.actual.positions[0]+self.pressure_configuration]
                 self.on_optimal_close = True
                 rospy.loginfo("Closing: " + str(closing_amount))
                 self.send_joint_trajectory(
@@ -226,10 +233,10 @@ class GripperGrasp(object):
     def grip_status_cb(self, data):
         # publish data to topic translated to human understanding
         bin_number = bin(data.data)[2:].zfill(8)  # data range: 0 -> 255
-        gOBJ = hex(int(bin_number[:2],2))
-        gSTA = hex(int(bin_number[2:4],2))
-        gGTO = hex(int(bin_number[4],2))
-        gACT = hex(int(bin_number[7],2))
+        gOBJ = hex(int(bin_number[:2], 2))
+        gSTA = hex(int(bin_number[2:4], 2))
+        gGTO = hex(int(bin_number[4], 2))
+        gACT = hex(int(bin_number[7], 2))
         if(str(gOBJ) == "0x1" or str(gOBJ) == "0x2"):
             self.is_grasped_msg.data = True
         else:
@@ -240,9 +247,8 @@ class GripperGrasp(object):
                 self.on_optimal_close = False
         self.pub_js.publish(self.is_grasped_msg)
 
-        self.pub_gth.publish("Gripper status: " + self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
-
-
+        self.pub_gth.publish("Gripper status: " +
+                             self.hex_to_human(gOBJ, gSTA, gGTO, gACT))
 
     def hex_to_human(self, gOBJ, gSTA, gGTO, gACT):
         gOBJ_dict = {"0x0": "Fingers are in motion towards requested position. No object detected",
@@ -261,9 +267,11 @@ class GripperGrasp(object):
         gACT_dict = {"0x0": "Gripper reset",
                      "0x1": "Gripper activation"}
         try:
-            res = gACT_dict[gACT] + " " + gGTO_dict[gGTO] + " " + gSTA_dict[gSTA] + " " + gOBJ_dict[gOBJ]
+            res = gACT_dict[gACT] + " " + gGTO_dict[gGTO] + \
+                " " + gSTA_dict[gSTA] + " " + gOBJ_dict[gOBJ]
         except Exception:
-            rospy.logerr("Not able to decode hex codes in gOBJ, gSTA, gGTO, gACT")
+            rospy.logerr(
+                "Not able to decode hex codes in gOBJ, gSTA, gGTO, gACT")
             rospy.logerr("gOBJ hex: " + str(gOBJ))
             rospy.logerr("gSTA hex: " + str(gSTA))
             rospy.logerr("gGTO hex: " + str(gGTO))
@@ -273,6 +281,8 @@ class GripperGrasp(object):
 
 
 if __name__ == '__main__':
-    rospy.init_node('gripper_grasping')
+
+    rclpy.init(args=sys.argv)
     gg = GripperGrasp()
-    rospy.spin()
+    rclpy.spin(gg)
+    # rclpy.shutdown()
