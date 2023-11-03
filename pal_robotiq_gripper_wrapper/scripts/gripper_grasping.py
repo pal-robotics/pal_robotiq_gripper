@@ -9,6 +9,7 @@ so to skip overheating.
 """
 
 import rclpy
+import time
 from rclpy.node import Node
 from control_msgs.msg import JointTrajectoryControllerState
 from std_msgs.msg import String, UInt8, Bool
@@ -156,8 +157,7 @@ class GripperGrasp(Node):
         # If in simulation
         if self.use_sim_time:
             if self.last_state.error.positions[0] >= 0.03:
-                # rospy.sleep(1)
-                return
+                time.sleep(1)
             if self.last_state.error.positions[0] >= 0.03:
                 return True
             return False
@@ -174,21 +174,21 @@ class GripperGrasp(Node):
         # or we reach timeout
 
         # CREAR TIMER!!!
-        initial_time = rospy.Time.now()
-        r = rospy.Rate(self.rate)
+        initial_time = rclpy.Time.now()
+        r = rclpy.Rate(self.rate)
         closing_amount = self.close_configuration
         # Initial command, wait for it to do something
-        rospy.loginfo("Closing: " + str(closing_amount))
+        self.get_logger("Closing: " + str(closing_amount))
         self.send_joint_trajectory(
             closing_amount, self.closing_time, self.on_optimal_close)
-        while not rospy.is_shutdown() and \
-            (rospy.Time.now() - initial_time) < rospy.Duration(self.timeout) and \
+        while not rclpy.is_shutdown() and \
+            (rclpy.Time.now() - initial_time) < rclpy.Duration(self.timeout) and \
                 not self.on_optimal_close and self.last_state:
             if self.check_is_grasped():
                 closing_amount = [
                     self.last_state.actual.positions[0]+self.pressure_configuration]
                 self.on_optimal_close = True
-                rospy.loginfo("Closing: " + str(closing_amount))
+                self.get_logger().info("Closing: " + str(closing_amount))
                 self.send_joint_trajectory(
                     closing_amount, self.closing_time, self.on_optimal_close)
             r.sleep()
@@ -196,14 +196,14 @@ class GripperGrasp(Node):
         return EmptyResponse()
 
     def release_cb(self, req):
-        rospy.logdebug("Received release request!")
+        self.get_logger().debug("Received release request!")
         # From wherever we are opening gripper
         self.on_optimal_close = False
 
         open_amount = [0.0] * len(self.real_joint_names)
         # Initial command, wait for it to do something
         if self.on_optimal_open is False:
-            rospy.loginfo("Opening: " + str(open_amount))
+            self.get_logger().info("Opening: " + str(open_amount))
             self.send_joint_trajectory(
                 open_amount, self.opening_time, self.on_optimal_open)
             self.on_optimal_close = False
@@ -215,7 +215,7 @@ class GripperGrasp(Node):
     def send_joint_trajectory(self, joint_positions, execution_time, goal_position_reached):
         jt = JointTrajectory()
         jt.joint_names = self.real_joint_names
-        jt.header.stamp = rospy.Time.now()
+        jt.header.stamp = rclpy.Time.now()
         p = JointTrajectoryPoint()
         p.positions = joint_positions
 
@@ -270,12 +270,12 @@ class GripperGrasp(Node):
             res = gACT_dict[gACT] + " " + gGTO_dict[gGTO] + \
                 " " + gSTA_dict[gSTA] + " " + gOBJ_dict[gOBJ]
         except Exception:
-            rospy.logerr(
+            self.get_logger(
                 "Not able to decode hex codes in gOBJ, gSTA, gGTO, gACT")
-            rospy.logerr("gOBJ hex: " + str(gOBJ))
-            rospy.logerr("gSTA hex: " + str(gSTA))
-            rospy.logerr("gGTO hex: " + str(gGTO))
-            rospy.logerr("gACT hex: " + str(gACT))
+            self.get_logger("gOBJ hex: " + str(gOBJ))
+            self.get_logger("gSTA hex: " + str(gSTA))
+            self.get_logger("gGTO hex: " + str(gGTO))
+            self.get_logger("gACT hex: " + str(gACT))
             res = None
         return res
 
