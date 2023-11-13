@@ -17,10 +17,24 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from std_srvs.srv import Empty, EmptyResponse
 from sensor_msgs.msg import JointState
 from rcl_interfaces import ParameterType
+from rcl_interfaces.msg import SetParametersResult
+
 from rclpy.parameter import Parameter
 
 
 class GripperGrasp(Node):
+    def parameters_callback(self, params):
+        for param in params:
+            if param.name == "timeout":
+                self.timeout = param.value
+            elif param.name == "closing_time":
+                self.closing_time = param.value
+            elif param.name == "rate":
+                self.rate = param.value
+            elif param.name == "pressure":
+                self.pressure_configuration = param.value
+        return SetParametersResult(successful=True)
+    
     def __init__(self):
         super().__init__('gripper_grasping')
         self.get_logger().info("Initializing Gripper Grasper...")
@@ -60,11 +74,14 @@ class GripperGrasp(Node):
         
         # self.timeout = self.declare_parameter("timeout", 2.0,
         #                                       "timeout fort to use dynamic parameters in my ROS2 code. I defined a callback function, if a parameter is changed with following line: the closing action", )
-
+        #DYNAMIC!!!
         self.timeout = self.declare_parameter("timeout", Parameter.Type.DOUBLE, 2.0).value
+
+
         self.closing_time = self.declare_parameter("closing_time", Parameter.Type.DOUBLE, 0.2).value
         self.rate = self.declare_parameter("rate",Parameter.Type.INTEGER, 25).value
         self.pressure_configuration = self.declare_parameter("pressure",Parameter.Type.DOUBLE, 0.08).value
+        self.add_on_set_parameters_callback(self.parameters_callback)
 
         self.get_logger().info("Initialized dynamic reconfigure on: " + str(rclpy.get_name()))
 
@@ -108,6 +125,7 @@ class GripperGrasp(Node):
 
         self.pub_js = self.create_publisher(Bool, "{}/is_grasped".format(self.controller_name),
                                             1)
+
 
     def ddr_cb(self, config, level):
         self.get_logger().info(
