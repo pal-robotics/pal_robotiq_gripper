@@ -14,10 +14,33 @@ from sensor_msgs.msg import JointState
 
 closed  = [0.0]
 
+# def joint_states_cb():
+   
+#   trajectory = JointTrajectory()
+#   trajectory.joint_names = joint_names
+#   trajectory.points.append(JointTrajectoryPoint())
+#   trajectory.points[0].positions = closed
+#   trajectory.points[0].velocities = [0.0 for i in joint_names]
+#   trajectory.points[0].accelerations = [0.0 for i in joint_names]
+#   trajectory.points[0].time_from_start = rclpy.Duration(2.0)
+
+#   node.get_logger("Opening gripper...")
+#   goal = FollowJointTrajectoryGoal()
+#   goal.trajectory = trajectory
+#   goal.goal_time_tolerance = rclpy.Duration(0.0)
+
+#   client.send_goal(goal)
+#   client.wait_for_result(rclpy.Duration(3.0))
+#   node.get_logger("Gripper opened.")
+
+
+
 if __name__ == "__main__":
 
   rclpy.init(args=sys.argv)
   node = rclpy.create_node('home_gripper')
+  rclpy.spin()
+
   suffix = node.declare_parameter("~suffix", Parameter.Type.STRING, None)
   if suffix == None:
       node.get_logger("No suffix found in param: ~suffix")
@@ -31,19 +54,6 @@ if __name__ == "__main__":
   # TODO: use wait_for_message (not available for humble) 
   # rclpy.wait_for_message(JointState, "joint_states")
 
-  trajectory = JointTrajectory()
-  trajectory.joint_names = joint_names
-  trajectory.points.append(JointTrajectoryPoint())
-  trajectory.points[0].positions = closed
-  trajectory.points[0].velocities = [0.0 for i in joint_names]
-  trajectory.points[0].accelerations = [0.0 for i in joint_names]
-  trajectory.points[0].time_from_start = rclpy.Duration(2.0)
+  # check if it is still necessary
+  # sub = node.create_subscription(JointState, "joint_states", joint_states_cb)
 
-  node.get_logger("Opening gripper...")
-  goal = FollowJointTrajectoryGoal()
-  goal.trajectory = trajectory
-  goal.goal_time_tolerance = rclpy.Duration(0.0)
-
-  client.send_goal(goal)
-  client.wait_for_result(rclpy.Duration(3.0))
-  node.get_logger("Gripper opened.")

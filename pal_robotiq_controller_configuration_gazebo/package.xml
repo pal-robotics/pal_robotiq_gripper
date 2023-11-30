@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="3">
   <name>pal_robotiq_controller_configuration_gazebo</name>
   <version>0.0.19</version>
   <description>Controllers configuration for Robotiq grippers in Gazebo</description>
