@@ -5,6 +5,7 @@
   <description>The pal_robotiq_controller_configuration package</description>
 
   <author email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</author>
+  <maintainer email="aina.irisarri@pal-robotics.com">Aina Irisarri</maintainer>
   <maintainer email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
 
   <license>BSD</license>

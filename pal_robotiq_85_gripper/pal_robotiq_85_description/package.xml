@@ -5,6 +5,7 @@
   <description>The pal_robotiq_85_description package</description>
 
   <maintainer email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
+  <maintainer email="aina.irisarri@pal-robotics.com">Aina Irisarri</maintainer>
   <author email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</author>
 
   <license>BSD</license>
