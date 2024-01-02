@@ -8,9 +8,6 @@
 import os
 
 from dataclasses import dataclass
-from launch.actions import IncludeLaunchDescription
-from launch_ros.actions import Node
-from launch.substitutions import PythonExpression
 
 from ament_index_python.packages import get_package_share_directory
 from controller_manager.launch_utils import generate_load_controller_launch_description
@@ -35,10 +32,12 @@ class LaunchArguments(LaunchArgumentsBase):
     #     description='model of the robotiq gripper')
 
 def declare_actions(launch_description: LaunchDescription, launch_args: LaunchArguments):
+
     launch_description.add_action(OpaqueFunction(function=setup_controller_configuration))
+    
     launch_controller = generate_load_controller_launch_description(
         controller_name=LaunchConfiguration("controller_name"),
-        controller_type='position_controllers/JointTrajectoryController',
+        controller_type='joint_trajectory_controller/JointTrajectoryController',
         controller_params_file=LaunchConfiguration("controller_config"))
 
     launch_description.add_action(launch_controller)
