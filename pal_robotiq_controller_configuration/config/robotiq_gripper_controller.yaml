@@ -1,11 +1,11 @@
 ${EE_SIDE_PREFIX}_controller:
-  ros_parameters:
+  ros__parameters:
     type: joint_trajectory_controller/JointTrajectoryController
     joints:
       - ${EE_SIDE_PREFIX}_finger_joint
-    command_interfaces:
+    command_interfaces: 
       - position
-    state_interfaces:
+    state_interfaces: 
       - position
 
     constraints:
