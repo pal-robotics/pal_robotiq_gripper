@@ -27,14 +27,15 @@ class LaunchArguments(LaunchArgumentsBase):
         choices=['', 'left', 'right'],
         description='side of the end effector')
     # model: DeclareLaunchArgument = DeclareLaunchArgument(
-    #     name='model', # Current models are robotiq-2f-85 and robotiq-2f-140 
+    #     name='model', # Current models are robotiq-2f-85 and robotiq-2f-140
     #     choices=['robotiq-2f-85', 'robotiq-2f-140'],
     #     description='model of the robotiq gripper')
+
 
 def declare_actions(launch_description: LaunchDescription, launch_args: LaunchArguments):
 
     launch_description.add_action(OpaqueFunction(function=setup_controller_configuration))
-    
+
     launch_controller = generate_load_controller_launch_description(
         controller_name=LaunchConfiguration("controller_name"),
         controller_type='joint_trajectory_controller/JointTrajectoryController',
@@ -43,6 +44,7 @@ def declare_actions(launch_description: LaunchDescription, launch_args: LaunchAr
     launch_description.add_action(launch_controller)
 
     return
+
 
 def setup_controller_configuration(context: LaunchContext):
 
@@ -61,6 +63,7 @@ def setup_controller_configuration(context: LaunchContext):
 
     return [SetLaunchConfiguration('controller_name', controller_name),
             SetLaunchConfiguration('controller_config', parsed_yaml)]
+
 
 def generate_launch_description():
 

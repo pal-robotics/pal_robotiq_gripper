@@ -31,7 +31,6 @@ def declare_args(context, *args, **kwargs):
     sim_time_arg = DeclareLaunchArgument(
         'use_sim_time', default_value='False',
         description='Use simulation time')
-    
 
     robot_name = read_launch_argument('robot_name', context)
 
@@ -45,10 +44,11 @@ def declare_args(context, *args, **kwargs):
 
 
 def launch_setup(context, *args, **kwargs):
-    
+
     robot_description = {'robot_description': load_xacro(
         Path(os.path.join(
-            get_package_share_directory('pal_robotiq_description'), 'robots', 'pal_robotiq_140_gripper.urdf.xacro')),
+            get_package_share_directory('pal_robotiq_description'), 'robots',
+            'pal_robotiq_140_gripper.urdf.xacro')),
     )}
     rsp = Node(package='robot_state_publisher',
                executable='robot_state_publisher',

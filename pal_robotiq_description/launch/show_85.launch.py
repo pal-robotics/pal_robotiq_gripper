@@ -6,9 +6,7 @@
 # copied or disclosed except in accordance with the terms of that agreement.
 
 from launch import LaunchDescription
-from launch.actions import OpaqueFunction
 from launch_pal.include_utils import include_launch_py_description
-from launch_pal.arg_utils import read_launch_argument
 from launch_ros.actions import Node
 
 
