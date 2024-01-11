@@ -16,7 +16,7 @@ limitations under the License.
  -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="robotiq_transmission" params="prefix reduction:=1.0">
+  <xacro:macro name="robotiq_transmission" params="prefix reduction">
     <transmission name="${prefix}_trans">
       <plugin>transmission_interface/SimpleTransmission</plugin>
 
