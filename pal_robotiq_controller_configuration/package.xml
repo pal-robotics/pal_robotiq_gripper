@@ -8,8 +8,8 @@
   <maintainer email="aina.irisarri@pal-robotics.com">Aina Irisarri</maintainer>
   <maintainer email="sai-kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
 
-  <license>BSD</license>
-
+  <license>Apache License 2.0</license>
+  
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>position_controllers</exec_depend>

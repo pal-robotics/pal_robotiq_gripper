@@ -5,8 +5,8 @@
   <description>The pal_robotiq_description package</description>
   <maintainer email="aina.irisarri@pal-robotics.com">Aina Irisarri</maintainer>
   <author email="aina.irisarri@pal-robotics.com">Aina Irisarri</author>
-  <license>BSD</license>
-
+  <license>Apache License 2.0</license>
+  
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
   <exec_depend>xacro</exec_depend>
   <test_depend>ament_lint_auto</test_depend>
