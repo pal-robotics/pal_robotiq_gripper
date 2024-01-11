@@ -15,8 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
  -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="ros2_control_robotiq_gripper" params="name reduction" >
-    <joint name="${name}_joint">
+  <xacro:macro name="ros2_control_robotiq_85_gripper" params="name reduction" >
+    <joint name="${name}_finger_joint">
       <command_interface name="position" />
 
       <state_interface name="position" />
@@ -24,8 +24,139 @@ limitations under the License.
       <state_interface name="effort" />
     </joint>
 
+    <joint name="${name}_right_outer_knuckle_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    
+    <joint name="${name}_right_inner_knuckle_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="${name}_right_inner_finger_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">-1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="${name}_left_inner_finger_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">-1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="${name}_left_inner_knuckle_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="${name}_left_outer_knuckle_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
     <xacro:include filename="$(find pal_robotiq_description)/urdf/robotiq.transmission.xacro" />
-    <xacro:robotiq_transmission prefix="${name}" reduction="${reduction}" />
+    <xacro:robotiq_transmission prefix="${name}_finger" reduction="${reduction}" />
+
+  </xacro:macro>
+
+  <xacro:macro name="ros2_control_robotiq_140_gripper" params="name reduction" >
+    <joint name="${name}_finger_joint">
+      <command_interface name="position" />
+
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+
+    <joint name="${name}_right_outer_knuckle_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">-1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="${name}_right_inner_knuckle_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">-1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="${name}_right_inner_finger_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="${name}_left_inner_finger_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <joint name="${name}_left_inner_knuckle_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">-1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="${name}_left_outer_knuckle_joint">
+      <param name="mimic">${name}_finger_joint</param>
+      <param name="multiplier">1</param>
+      <command_interface name="position"/>
+
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <xacro:include filename="$(find pal_robotiq_description)/urdf/robotiq.transmission.xacro" />
+    <xacro:robotiq_transmission prefix="${name}_finger" reduction="${reduction}" />
 
   </xacro:macro>
 
