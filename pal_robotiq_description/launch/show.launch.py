@@ -28,7 +28,7 @@ class LaunchArguments(LaunchArgumentsBase):
     robotiq_gripper: DeclareLaunchArgument = DeclareLaunchArgument(
         'gripper',
         default_value='robotiq-2f-85',
-        choices=['', 'robotiq-2f-85', 'robotiq-2f-140'],
+        choices=['robotiq-2f-85', 'robotiq-2f-140'],
         description='Robotiq gripper model'
     )
 
