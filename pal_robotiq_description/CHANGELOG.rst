@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2024-01-17)
+------------------
 * updating the package.xml version
 * removing empty choice for end_effector
 * renaming xacro files into the end_effector name

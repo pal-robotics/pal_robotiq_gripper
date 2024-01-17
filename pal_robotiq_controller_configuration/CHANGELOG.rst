@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_controller_configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2024-01-17)
+------------------
 * updating license to apache
 * linters
 * fix config yaml file error

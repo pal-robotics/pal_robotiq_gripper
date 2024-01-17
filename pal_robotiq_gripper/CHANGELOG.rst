@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_gripper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2024-01-17)
+------------------
 * updating license to apache
 * merging the 85 and 140 package into pal_robotiq_description
 * adapting package.xml & Cmake to the new structure
