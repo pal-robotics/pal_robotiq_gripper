@@ -1,20 +1,25 @@
 <?xml version="1.0"?>
-<package>
+<package format="3">
   <name>pal_robotiq_gripper</name>
   <version>0.0.19</version>
   <description>Robotiq Gripper Definition Packages</description>
   <maintainer email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
+  <maintainer email="aina.irisarri@pal-robotics.com">Aina Irisarri</maintainer>
   <author email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</author>
 
-  <license>BSD</license>
+  <license>Apache License 2.0</license>
+  <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <run_depend>pal_robotiq_85_gripper</run_depend>
-  <run_depend>pal_robotiq_140_gripper</run_depend>
-  <run_depend>pal_robotiq_epick_gripper</run_depend>
-  <run_depend>pal_robotiq_controller_configuration</run_depend>
+  <build_depend>rclcpp</build_depend>
+
+
+  <exec_depend>pal_robotiq_controller_configuration</exec_depend>
+  <exec_depend>pal_robotiq_description</exec_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
   <export>
-     <metapackage/>
+    <build_type>ament_cmake</build_type>
   </export>
+
 </package>
