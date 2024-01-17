@@ -2,6 +2,16 @@
 Changelog for package pal_robotiq_gripper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* updating license to apache
+* merging the 85 and 140 package into pal_robotiq_description
+* adapting package.xml & Cmake to the new structure
+* adding myself as maintainer
+* basic ros to ros2 changes
+* Cmake changes
+* Contributors: Aina Irisarri
+
 0.0.19 (2023-05-11)
 -------------------
 

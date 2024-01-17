@@ -2,6 +2,22 @@
 Changelog for package pal_robotiq_controller_configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* updating license to apache
+* linters
+* fix config yaml file error
+* changing the type of the controllers according to ros2
+* deleting the installation of the home_gripper script
+* adapting pal_robotiq_controller_configuration package to ros 2
+* adapting launch files into the new launch files structure
+* deleting unused home_gripper script
+* adding myself as maintainer
+* home_gripper ported but still need to check if necessary
+* controller configuration package ported
+* Cmake changes
+* Contributors: Aina Irisarri
+
 0.0.19 (2023-05-11)
 -------------------
 
