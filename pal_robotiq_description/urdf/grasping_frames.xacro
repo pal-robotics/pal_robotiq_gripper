@@ -12,9 +12,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-
   <!--
     Utility to create a grasping frame in the end effector.
 
@@ -23,7 +21,6 @@
       rpy: roll pitch yaw angles from parent link
       xyz: distances from parent link
   -->
-
   <xacro:macro name="pal_robotiq_grasping_frames" params="prefix xyz">
     <!-- Grasping frame X -->
     <joint name="${prefix}grasping_frame_joint" type="fixed">
