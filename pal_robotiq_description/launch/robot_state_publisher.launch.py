@@ -59,11 +59,11 @@ def setup_controller_configuration(context: LaunchContext):
     gripper_argument = read_launch_argument('gripper', context)
     gripper = gripper_argument.replace('-', '_')
 
-    robot_description = {'robot_description': load_xacro(
+    robot_description = load_xacro(
         Path(os.path.join(
             get_package_share_directory('pal_robotiq_description'), 'robots',
             'pal_' + gripper + '_gripper.urdf.xacro')),
-    )}
+    )
 
     return [SetLaunchConfiguration('robot_description', robot_description)]
 
