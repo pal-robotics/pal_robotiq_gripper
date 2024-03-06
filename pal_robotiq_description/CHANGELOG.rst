@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.1 (2024-03-06)
+------------------
 * Merge branch 'dtk/fix/mimic-joint-hack' into 'humble-devel'
   Add temporary fix for mimic-joint issue...
   See merge request robots/pal_robotiq_gripper!22
