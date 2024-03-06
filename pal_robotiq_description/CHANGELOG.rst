@@ -2,6 +2,22 @@
 Changelog for package pal_robotiq_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'dtk/fix/mimic-joint-hack' into 'humble-devel'
+  Add temporary fix for mimic-joint issue...
+  See merge request robots/pal_robotiq_gripper!22
+* Add temporary fix for mimic-joint issue https://github.com/ros-controls/gazebo_ros2_control/issues/173
+* Merge branch 'fix/rviz-dicc' into 'humble-devel'
+  Fix robot_description set up
+  See merge request robots/pal_robotiq_gripper!21
+* fix robot_description set up variable
+* Merge branch 'feat/robotiq_ros2_support' into 'humble-devel'
+  Fix robot description urdf error
+  See merge request robots/pal_robotiq_gripper!20
+* fix robot description urdf error
+* Contributors: Aina Irisarri, David ter Kuile, davidterkuile
+
 2.0.0 (2024-01-17)
 ------------------
 * updating the package.xml version
