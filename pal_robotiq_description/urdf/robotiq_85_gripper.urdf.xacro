@@ -333,6 +333,29 @@
     <xacro:inner_knuckle prefix="${prefix}" fingerprefix="${fingerprefix}" reflect="${reflect}"/>
   </xacro:macro>
 
+    <!--Dummy joint/link to prevent error with mimic joint
+    See https://github.com/ros-controls/gazebo_ros2_control/issues/173
+    -->
+
+ <xacro:macro name="dummy_mimic_joint" params="name parent">
+
+    <link name="${name}_dummy_mimic_link"/>
+
+    <joint name="${name}_joint_mimic" type="fixed">
+      <parent link="${parent}" />
+      <child link="${name}_dummy_mimic_link" />
+    </joint>
+
+  </xacro:macro>
+
+  <xacro:macro name="finger_mimic_dummy" params="prefix fingerprefix">
+
+    <xacro:dummy_mimic_joint name="${prefix}${fingerprefix}_outer_finger" parent="${prefix}base_link"/>
+    <xacro:dummy_mimic_joint name="${prefix}${fingerprefix}_inner_finger" parent="${prefix}base_link"/>
+    <xacro:dummy_mimic_joint name="${prefix}${fingerprefix}_inner_finger_pad" parent="${prefix}base_link"/>
+    <xacro:dummy_mimic_joint name="${prefix}${fingerprefix}_inner_knuckle" parent="${prefix}base_link"/>
+  </xacro:macro>
+
   <xacro:macro name="finger_joint" params="prefix">
     <joint name="${prefix}finger_joint" type="revolute">
       <origin xyz="0 -0.0306011 0.054904" rpy="0 0 ${pi}"/>
@@ -371,12 +394,19 @@
     <xacro:pal_robotiq_coupling_link prefix="${prefix}"/>
     <xacro:finger_links prefix="${prefix}" fingerprefix="left" reflect="1"/>
     <xacro:finger_links prefix="${prefix}" fingerprefix="right" reflect="-1"/>
+
+    <xacro:finger_mimic_dummy prefix="${prefix}" fingerprefix="left"/>
+    <xacro:finger_mimic_dummy prefix="${prefix}" fingerprefix="right"/>
+
     <xacro:robotiq_base_joint prefix="${prefix}" />
     <xacro:pal_robotiq_coupling_joint prefix="${prefix}" parent="${parent}">
       <xacro:insert_block name="origin" />
     </xacro:pal_robotiq_coupling_joint>
     <xacro:finger_joint prefix="${prefix}"/>
     <xacro:right_outer_knuckle_joint prefix="${prefix}"/>
+
+    <xacro:dummy_mimic_joint name="${prefix}right_outer_knuckle" parent="${prefix}base_link"/>
+
     <!--This xacro is used to be able to grasp object in simulmation more robustly, it could cause segfault at grasping time -->
     <xacro:gazebo_gripper_grasp name="${prefix}grasp" name_prefix_left="${prefix}left_inner_finger" name_prefix_right="${prefix}right_inner_finger" parent_joint="${parent}"/>
   </xacro:macro>
