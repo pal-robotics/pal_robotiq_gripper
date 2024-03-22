@@ -21,11 +21,8 @@ limitations under the License.
       <joint name="${mimic_joint_name}">
         <param name="mimic">${actuated_joint_name}</param>
         <param name="multiplier">${multiplier}</param>
-        <command_interface name="position" />
-
-        <state_interface name="position" />
-        <state_interface name="velocity" />
-        <state_interface name="effort" />
+        <param name="offset">0</param>
+        <!-- Interfaces are handled automatically on Gazebo and Hardware -->
       </joint>
       
     </xacro:macro>
