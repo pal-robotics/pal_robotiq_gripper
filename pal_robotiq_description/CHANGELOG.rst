@@ -2,6 +2,11 @@
 Changelog for package pal_robotiq_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove mimic joint interfaces
+* Contributors: Noel Jimenez
+
 2.0.1 (2024-03-06)
 ------------------
 * Merge branch 'dtk/fix/mimic-joint-hack' into 'humble-devel'
