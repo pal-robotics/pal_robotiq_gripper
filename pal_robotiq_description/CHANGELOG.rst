@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.2 (2024-03-25)
+------------------
 * Remove mimic joint interfaces
 * Contributors: Noel Jimenez
 
