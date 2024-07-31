@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2024-07-31)
+------------------
 * remove extra joint
 * Contributors: Aina
 
