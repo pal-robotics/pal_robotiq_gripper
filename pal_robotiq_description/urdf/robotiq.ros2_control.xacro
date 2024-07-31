@@ -57,10 +57,6 @@ limitations under the License.
                                     actuated_joint_name="${name}_finger_joint" 
                                     multiplier="-1"/>
 
-    <xacro:ros2_control_mimic_joint mimic_joint_name="${name}_left_outer_knuckle_joint" 
-                                    actuated_joint_name="${name}_finger_joint" 
-                                    multiplier="1"/>
-    
     <xacro:include filename="$(find pal_robotiq_description)/urdf/robotiq.transmission.xacro" />
     <xacro:robotiq_transmission prefix="${name}_finger" reduction="${reduction}" />
 
@@ -95,10 +91,6 @@ limitations under the License.
     <xacro:ros2_control_mimic_joint mimic_joint_name="${name}_left_inner_knuckle_joint" 
                                     actuated_joint_name="${name}_finger_joint" 
                                     multiplier="-1"/>
-
-    <xacro:ros2_control_mimic_joint mimic_joint_name="${name}_left_outer_knuckle_joint" 
-                                    actuated_joint_name="${name}_finger_joint" 
-                                    multiplier="1"/>
 
     <xacro:include filename="$(find pal_robotiq_description)/urdf/robotiq.transmission.xacro" />
     <xacro:robotiq_transmission prefix="${name}_finger" reduction="${reduction}" />
