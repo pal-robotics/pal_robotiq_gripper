@@ -2,6 +2,11 @@
 Changelog for package pal_robotiq_controller_configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use controller_type from the controllers config
+* Contributors: Noel Jimenez
+
 2.1.0 (2024-07-31)
 ------------------
 
