@@ -314,7 +314,7 @@
     <joint name="${prefix}base_joint" type="fixed">
       <parent link="${prefix}coupler_link"/>
       <child link="${prefix}base_link"/>
-      <origin xyz="0 0 0.02754" rpy="0 0 0"/>
+      <origin xyz="0 0 0.0312" rpy="0 0 0"/>
     </joint>
   </xacro:macro>
 
