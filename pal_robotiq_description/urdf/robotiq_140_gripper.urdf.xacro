@@ -4,6 +4,7 @@
    <xacro:include filename="$(find pal_robotiq_description)/urdf/grasping_frames.xacro" />
   <xacro:property name="finger_joint_damping" value="0.0025"/>
   <xacro:property name="finger_joint_friction" value="0.0"/>
+  <xacro:property name="gripper_eps" value="0.001" />
 
   <xacro:if value="${gazebo_version == 'classic'}">
     <!-- Add a grasp hack that attach the object when grasped by the gripper to prevent it from falling -->
@@ -21,6 +22,15 @@
         </gripper>
       </gazebo>
     </xacro:macro>
+  </xacro:if>
+
+  <!-- TODO: set lower limit back to 0 when moving to Gazebo Harmonic or ROS 2 Jazzy -->
+  <!-- See https://github.com/gazebosim/gz-sim/issues/1684 for more information -->
+  <xacro:if value="${gazebo_version == 'classic'}">
+    <xacro:property name="gripper_lower_limit" value="0.0"/>
+  </xacro:if>
+  <xacro:if value="${gazebo_version == 'gazebo'}">
+    <xacro:property name="gripper_lower_limit" value="-1e-3"/>
   </xacro:if>
 
   <xacro:macro name="outer_knuckle" params="prefix fingerprefix stroke">
@@ -330,8 +340,12 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}left_outer_knuckle" />
       <axis xyz="-1 0 0" />
-      <limit lower="0" upper="0.7" velocity="2" effort="0.12" />
+      <limit lower="${gripper_lower_limit}" upper="0.7" velocity="2" effort="0.12" />
       <dynamics damping="0.03"/>
+      <safety_controller k_position="20"
+                        k_velocity="20"
+                        soft_lower_limit="${gripper_lower_limit + gripper_eps}"
+                        soft_upper_limit="${0.7 - gripper_eps}" />
     </joint>
     <gazebo reference="${prefix}finger_joint">
       <implicitSpringDamper>1</implicitSpringDamper>
@@ -347,7 +361,7 @@
       <child link="${prefix}right_outer_knuckle" />
       <axis xyz="1 0 0" />
       <limit lower="-0.725" upper="0.725" velocity="2" effort="0.12" />
-    <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
+      <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
     </joint>
     <xacro:finger_joints prefix="${prefix}" fingerprefix="right" reflect="-1.0"/>
   </xacro:macro>
