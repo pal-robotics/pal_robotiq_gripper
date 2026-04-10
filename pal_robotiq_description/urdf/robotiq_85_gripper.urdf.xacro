@@ -4,21 +4,33 @@
   <xacro:include filename="$(find pal_robotiq_description)/urdf/grasping_frames.xacro" />
   <xacro:property name="finger_joint_damping" value="0.0025"/>
   <xacro:property name="finger_joint_friction" value="0.0"/>
+  <xacro:property name="gripper_eps" value="0.001" />
 
-  <xacro:macro name="gazebo_gripper_grasp" params="name name_prefix_left name_prefix_right parent_joint">
-    <gazebo>
-      <gripper name="${name}">
-        <grasp_check>
-          <attach_steps>3</attach_steps>
-          <detach_steps>1</detach_steps>    <!-- should not change otherwise the object will be attached to the gripper too much time -->
-          <min_contact_count>3</min_contact_count>
-        </grasp_check>
-        <gripper_link>${name_prefix_left}</gripper_link>
-        <gripper_link>${name_prefix_right}</gripper_link>
-        <palm_link>${parent_joint}</palm_link>
-      </gripper>
-    </gazebo>
-  </xacro:macro>
+  <xacro:if value="${gazebo_version == 'classic'}">
+    <xacro:macro name="gazebo_gripper_grasp" params="name name_prefix_left name_prefix_right parent_joint">
+      <gazebo>
+        <gripper name="${name}">
+          <grasp_check>
+            <attach_steps>3</attach_steps>
+            <detach_steps>1</detach_steps>    <!-- should not change otherwise the object will be attached to the gripper too much time -->
+            <min_contact_count>3</min_contact_count>
+          </grasp_check>
+          <gripper_link>${name_prefix_left}</gripper_link>
+          <gripper_link>${name_prefix_right}</gripper_link>
+          <palm_link>${parent_joint}</palm_link>
+        </gripper>
+      </gazebo>
+    </xacro:macro>
+  </xacro:if>
+
+  <!-- TODO: set lower limit back to 0 when moving to Gazebo Harmonic or ROS 2 Jazzy -->
+  <!-- See https://github.com/gazebosim/gz-sim/issues/1684 for more information -->
+  <xacro:if value="${gazebo_version == 'classic'}">
+    <xacro:property name="gripper_lower_limit" value="0.0"/>
+  </xacro:if>
+  <xacro:if value="${gazebo_version == 'gazebo'}">
+    <xacro:property name="gripper_lower_limit" value="-1e-3"/>
+  </xacro:if>
 
   <xacro:macro name="outer_knuckle" params="prefix fingerprefix reflect">
     <link name="${prefix}${fingerprefix}_outer_knuckle">
@@ -215,7 +227,7 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}${fingerprefix}_inner_knuckle" />
       <axis xyz="1 0 0" />
-      <limit lower="0" upper="0.8757" velocity="2" effort="0.1" />
+      <limit lower="${gripper_lower_limit}" upper="0.8757" velocity="2" effort="0.1" />
       <mimic joint="${prefix}finger_joint" multiplier="1" offset="0" />
     </joint>
     <!-- <xacro:gazebo_ros2_control/> -->
@@ -227,7 +239,7 @@
       <parent link="${prefix}${fingerprefix}_outer_finger" />
       <child link="${prefix}${fingerprefix}_inner_finger" />
       <axis xyz="1 0 0" />
-      <limit lower="-0.8757" upper="0" velocity="2" effort="0.1" />
+      <limit lower="-0.8757" upper="${-gripper_lower_limit}" velocity="2" effort="0.1" />
       <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
     </joint>
     <!-- <xacro:gazebo_ros2_control/> -->
@@ -362,8 +374,12 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}left_outer_knuckle" />
       <axis xyz="1 0 0" />
-      <limit lower="0" upper="0.8" velocity="2" effort="0.1" />
+      <limit lower="${gripper_lower_limit}" upper="0.8" velocity="2" effort="0.1" />
       <dynamics damping="0.03"/>
+      <safety_controller k_position="20"
+                        k_velocity="20"
+                        soft_lower_limit="${gripper_lower_limit + gripper_eps}"
+                        soft_upper_limit="${0.8 - gripper_eps}" />
     </joint>
     <gazebo reference="${prefix}finger_joint">
       <implicitSpringDamper>1</implicitSpringDamper>
@@ -378,7 +394,7 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}right_outer_knuckle" />
       <axis xyz="1 0 0" />
-      <limit lower="0" upper="0.81" velocity="2" effort="0.1" />
+      <limit lower="${gripper_lower_limit}" upper="0.81" velocity="2" effort="0.1" />
       <mimic joint="${prefix}finger_joint" multiplier="1" offset="0" />
     </joint>
     <!-- <xacro:gazebo_ros2_control/> -->
@@ -408,7 +424,9 @@
     <xacro:dummy_mimic_joint name="${prefix}right_outer_knuckle" parent="${prefix}base_link"/>
 
     <!--This xacro is used to be able to grasp object in simulmation more robustly, it could cause segfault at grasping time -->
-    <xacro:gazebo_gripper_grasp name="${prefix}grasp" name_prefix_left="${prefix}left_inner_finger" name_prefix_right="${prefix}right_inner_finger" parent_joint="${parent}"/>
+    <xacro:if value="${gazebo_version == 'classic'}">
+      <xacro:gazebo_gripper_grasp name="${prefix}grasp" name_prefix_left="${prefix}left_inner_finger" name_prefix_right="${prefix}right_inner_finger" parent_joint="${parent}"/>
+    </xacro:if>
   </xacro:macro>
 
 </robot>
