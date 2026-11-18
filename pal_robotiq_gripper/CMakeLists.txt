@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 project(pal_robotiq_gripper)
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
