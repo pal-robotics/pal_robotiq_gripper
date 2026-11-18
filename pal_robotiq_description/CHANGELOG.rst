@@ -2,6 +2,11 @@
 Changelog for package pal_robotiq_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Bump cmake_minimum_required to 3.10
+* Contributors: Mathias Lüdtke
+
 2.3.0 (2026-04-10)
 ------------------
 * Add safety controller to prevent the gripper to get stuck in simulation with a small epsilon
