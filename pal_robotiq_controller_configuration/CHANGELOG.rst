@@ -2,8 +2,8 @@
 Changelog for package pal_robotiq_controller_configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.1 (2026-11-18)
+------------------
 * Bump cmake_minimum_required to 3.10
 * Contributors: Mathias Lüdtke
 
